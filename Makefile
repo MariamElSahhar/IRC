@@ -10,33 +10,39 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = irc
+NAME = ircserv
 CXX = c++
 CXXFLAGS = -std=c++98 -Wall -Werror -Wextra
 
+INC_PATH = ./includes/
+CFI = -I$(INC_PATH)
+
+SRC_PATH = ./src/
 SRC = $(shell find $(SRC_PATH) -name "*.cpp")
 
 OBJ_PATH =	./obj/
-OBJ =	$(addprefix $(OBJ_PATH), $(notdir $(SRC:.cpp=.o)))
+OBJ = $(SRC:$(SRC_PATH)%.cpp=$(OBJ_PATH)%.o)
 
-$(OBJ_PATH)%.o: %.cpp
+RM = rm -rf
+
+$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
 			@printf "\n$(CY)Generating object...$(RC)\n"
 			mkdir -p $(OBJ_PATH)
-			$(CC) $(CFLAGS) -c $< -o $@
+			$(CC) $(CFLAGS) $(CFI) -c $< -o $@
 			@printf "\n$(GR)Object ready!$(RC)\n"
 
 $(NAME): 	$(OBJ)
 			@printf "\n$(CY)Generating executable...$(RC)\n"
-			$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
+			$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME) $(CFI)
 			@printf "\n$(GR)Done!$(RC)\n"
 
 all: $(NAME)
 
 clean:
-	rm -f $(OBJ)
+	$(RM) $(OBJ_PATH)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 
@@ -47,3 +53,9 @@ leak:	all
 	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME)
 
 .PHONY: all clean fclean re run
+
+GR	= \033[32;1m
+RE	= \033[31;1m
+YE	= \033[33;1m
+CY	= \033[36;1m
+RC	= \033[0m
