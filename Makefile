@@ -18,7 +18,7 @@ INC_PATH = ./includes/
 CFI = -I$(INC_PATH)
 
 SRC_PATH = ./src/
-SRC = $(shell find $(SRC_PATH) -name "*.cpp")
+SRC = $(shell find $(SRC_PATH) -name "*.cpp" ! -path "$(SRC_PATH)commands/*")
 
 OBJ_PATH =	./obj/
 OBJ = $(SRC:$(SRC_PATH)%.cpp=$(OBJ_PATH)%.o)
