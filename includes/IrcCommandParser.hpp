@@ -2,15 +2,14 @@
 #define IRCCOMMANDPARSER_HPP
 
 #include "CommandFactory.hpp"
-#include <string>
 
 class IrcCommandParser {
-private:
+ private:
   std::string buffer;
   std::string command;
   std::string payload;
 
-public:
+ public:
   IrcCommandParser(std::string buffer);
   ~IrcCommandParser();
   CommandType getMessageType();

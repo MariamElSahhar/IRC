@@ -1,19 +1,18 @@
 #ifndef IRC_CLIENTS_HPP
 #define IRC_CLIENTS_HPP
 
-#include "Client.hpp"
 #include <map>
-#include <string>
+#include "Client.hpp"
 
 class IrcClients {
-public:
+ public:
   IrcClients();
   ~IrcClients();
   void createClient(int clientSocket, std::string ipClient);
   Client *getClient(int clientSocket);
   bool removeClient(int clientSocket);
 
-private:
+ private:
   std::map<int, Client *> mapSocketToClientInstance;
 };
 

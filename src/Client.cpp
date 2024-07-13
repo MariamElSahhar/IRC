@@ -5,9 +5,13 @@ Client::Client(int fd, std::string ip) {}
 
 Client::~Client() {}
 
-bool Client::isMessageReady() { return !this->fullMessage.empty(); }
+bool Client::isMessageReady() {
+  return !this->fullMessage.empty();
+}
 
-std::string Client::getEntireMessage() { return fullMessage; }
+std::string Client::getEntireMessage() {
+  return fullMessage;
+}
 
 void Client::messageHandler(char msg[]) {
   if (!fullMessage.empty()) {
@@ -24,13 +28,16 @@ void Client::messageHandler(char msg[]) {
 
 void Client::processMessage(const char *msg) {
   currentMessage.append(
-      msg); // Append the incoming message to the current message
+      msg);  // Append the incoming message to the current message
   fullMessage.append(
-      currentMessage); // Append the current message to the full message
+      currentMessage);  // Append the current message to the full message
 
-  if (!fullMessage.empty() && (fullMessage.back() == '\n' || fullMessage.back() == '\r')) // Remove trailing newline or carriage return characters
+  if (!fullMessage.empty() &&
+      (fullMessage.back() == '\n' ||
+       fullMessage.back() ==
+           '\r'))  // Remove trailing newline or carriage return characters
   {
     fullMessage.pop_back();
   }
-  currentMessage.clear(); // Clear the current message
+  currentMessage.clear();  // Clear the current message
 }

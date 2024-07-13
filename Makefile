@@ -12,29 +12,30 @@
 
 NAME = ircserv
 CXX = c++
-CXXFLAGS = -std=c++98 -Wall -Werror -Wextra
+#CXXFLAGS = -std=c++98 -Wall -Werror -Wextra
 
 INC_PATH = ./includes/
-CFI = -I$(INC_PATH)
+CFI = -I$(INC_PATH) -I$(INC_PATH)Commands/
 
 SRC_PATH = ./src/
 SRC = $(shell find $(SRC_PATH) -name "*.cpp" ! -path "$(SRC_PATH)commands/*")
 
-OBJ_PATH =	./obj/
-OBJ = $(SRC:$(SRC_PATH)%.cpp=$(OBJ_PATH)%.o)
+OBJ_PATH = ./obj/
+OBJ = $(patsubst $(SRC_PATH)%.cpp,$(OBJ_PATH)%.o,$(SRC))
+OBJ_DIRS = $(sort $(dir $(OBJ)))
+
+$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
+	mkdir -p $(@D)
+	@printf "\n$(CY)Generating object...$(RC)\n"
+	$(CXX) $(CXXFLAGS) $(CFI) -c $< -o $@
+	@printf "\n$(GR)Object ready!$(RC)\n"
 
 RM = rm -rf
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
-			@printf "\n$(CY)Generating object...$(RC)\n"
-			mkdir -p $(OBJ_PATH)
-			$(CC) $(CFLAGS) $(CFI) -c $< -o $@
-			@printf "\n$(GR)Object ready!$(RC)\n"
-
 $(NAME): 	$(OBJ)
-			@printf "\n$(CY)Generating executable...$(RC)\n"
-			$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME) $(CFI)
-			@printf "\n$(GR)Done!$(RC)\n"
+	@printf "\n$(CY)Generating executable...$(RC)\n"
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME) $(CFI)
+	@printf "\n$(GR)Done!$(RC)\n"
 
 all: $(NAME)
 

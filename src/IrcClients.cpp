@@ -1,5 +1,4 @@
 #include "IrcClients.hpp"
-#include <iostream>
 
 IrcClients::IrcClients() {}
 

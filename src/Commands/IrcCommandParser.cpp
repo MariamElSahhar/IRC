@@ -1,6 +1,4 @@
 #include "IrcCommandParser.hpp"
-#include <iostream>
-#include <string>
 
 IrcCommandParser::IrcCommandParser(std::string rawBuffer) : buffer(rawBuffer) {
   std::cout << "IrcCommandParser Parsing message: " << rawBuffer << std::endl;

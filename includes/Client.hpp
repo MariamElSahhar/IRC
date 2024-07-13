@@ -2,10 +2,12 @@
 #define CLIENT_HPP
 
 #include <deque>
+#include <iostream>
 #include <string>
+#include <vector>
 
 class Client {
-public:
+ public:
   Client(int fd, std::string ip);
   ~Client();
   void messageHandler(char msg[]);
@@ -13,7 +15,7 @@ public:
   std::string getEntireMessage();
   std::deque<std::string> pendingWrite;
 
-private:
+ private:
   std::string fullMessage;
   std::string currentMessage;
 

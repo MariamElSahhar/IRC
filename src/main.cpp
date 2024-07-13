@@ -10,10 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include <cstdlib>
 #include "Client.hpp"
-#include "IrcClients.hpp"
 #include "CommandFactory.hpp"
+#include "IrcClients.hpp"
+#include "Server.hpp"
 
 // Ports go from 0 to 65535 (5 digits - length)
 // Ports below 1024 are reserved
@@ -65,25 +66,34 @@ int main(int argc, char **argv) {
               << std::endl;
     return (EXIT_FAILURE);
   }
-	std::string port = argv[1];
-	std::string password = argv[2];
+  std::string port = argv[1];
+  std::string password = argv[2];
 
-	if (checkPortNumber(port) == true && isValidPassword(password) == true)
-	{
-		int portNumber = atoi(port.c_str());
-		IrcClients *ircClients = new IrcClients(); // creates an object of the Irc Clients, which is responsible to manage all the connected clientes
-		CommandFactory *commandFactory = new CommandFactory(); // creates an object of the Command Factory, which is reponsible to create command objects depending on the command type (PASS, MODE, etc)
-		Server server(portNumber, password, ircClients, commandFactory); // this is the most impostant class, which is reponsible for opening the socket and waiting for connections
-		server.start(); // here we will start the server and keep waiting and processing conections, on an infinite loop
+  if (checkPortNumber(port) == true && isValidPassword(password) == true) {
+    int portNumber = atoi(port.c_str());
+    IrcClients *ircClients =
+        new IrcClients();  // creates an object of the Irc Clients, which is
+                           // responsible to manage all the connected clientes
+    CommandFactory *commandFactory =
+        new CommandFactory();  // creates an object of the Command Factory,
+                               // which is reponsible to create command objects
+                               // depending on the command type (PASS, MODE,
+                               // etc)
+    Server server(portNumber, password, ircClients,
+                  commandFactory);  // this is the most impostant class, which
+                                    // is reponsible for opening the socket and
+                                    // waiting for connections
+    server.start();  // here we will start the server and keep waiting and
+                     // processing conections, on an infinite loop
 
-		delete commandFactory;
-		delete ircClients;
-		return (0);
-	}
-	else
-		return (-1);
+    delete commandFactory;
+    delete ircClients;
+    return (EXIT_SUCCESS);
+  } else
+    return (EXIT_FAILURE);
 }
 
-
 // From here I recommend going to start method "server.start();"
-// After make, run "./ircserv 9999 mypassword" for example, it will start the server and in another terminal, run "nc 127.0.0.1 9999" (same port) and type "PASS mypassword"(same password)
+// After make, run "./ircserv 9999 mypassword" for example, it will start the
+// server and in another terminal, run "nc 127.0.0.1 9999" (same port) and type
+// "PASS mypassword"(same password)

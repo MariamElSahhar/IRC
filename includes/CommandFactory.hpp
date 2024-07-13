@@ -1,6 +1,14 @@
 #ifndef COMMANDFACTORY_HPP
 #define COMMANDFACTORY_HPP
 
+#include "CommandInvite.hpp"
+#include "CommandJoin.hpp"
+#include "CommandKick.hpp"
+#include "CommandMode.hpp"
+#include "CommandPart.hpp"
+#include "CommandPass.hpp"
+#include "CommandPrivMsg.hpp"
+#include "CommandTopic.hpp"
 #include "ICommand.hpp"
 
 class ICommand;
@@ -11,14 +19,14 @@ enum CommandType {
   JOIN,
   KICK,
   MODE,
-  PART, // check if needed
+  PART,  // check if needed
   PASS,
   PRIVMSG,
   TOPIC
 };
 
 class CommandFactory {
-public:
+ public:
   CommandFactory();
   ~CommandFactory();
   ICommand *createCommand(CommandType cmdType);
