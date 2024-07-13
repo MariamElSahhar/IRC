@@ -1,1 +1,0 @@
-// TOPIC - Change or view the channel topic

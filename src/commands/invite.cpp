@@ -1,1 +1,0 @@
-// INVITE - Invite a client to a channel
