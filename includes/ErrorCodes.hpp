@@ -48,3 +48,7 @@
 #define ERR_WRONGKEY(channel, host) (":" + host + " ERROR " + channel + " :Wrong Channel key \r\n")
 #define ERR_UNKNOWNMODE(mode, channel) ("472 " + mode + " :is unknown mode char to me for " + channel + "\r\n")
 #define RPL_QUIT(prefix, message) (":" + prefix + " QUIT " + message + "\r\n")
+
+
+// Error codes can be found on https://www.irchelp.org/protocol/rfc/chapter6.html
+// this website has the errors and describes the situations to use each of them

@@ -1,16 +1,28 @@
 #include "Client.hpp"
 #include "Server.hpp"
 
-Client::Client(int fd, std::string ip) {}
+Client::Client(int fd, std::string ip) {
+    (void) fd;
+    (void) ip;
+    isAuthenticated = false; // using in PASS Command (setting to false in the begging and true after validation)
+}
 
 Client::~Client() {}
 
+void Client::authenticate() {
+    isAuthenticated = true;
+}
+
+bool Client::getAuthentication() {
+    return (isAuthenticated);
+  }
+
 bool Client::isMessageReady() {
-  return !this->fullMessage.empty();
+  return (!this->fullMessage.empty());
 }
 
 std::string Client::getEntireMessage() {
-  return fullMessage;
+  return (fullMessage);
 }
 
 void Client::messageHandler(char msg[]) {

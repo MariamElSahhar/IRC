@@ -14,10 +14,14 @@ class Client {
   bool isMessageReady();
   std::string getEntireMessage();
   std::deque<std::string> pendingWrite;
+  void authenticate();
+  bool getAuthentication();
 
  private:
   std::string fullMessage;
   std::string currentMessage;
+
+  bool isAuthenticated;
 
   void processMessage(const char *msg);
 };

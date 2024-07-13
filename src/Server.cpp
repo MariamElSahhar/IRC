@@ -41,6 +41,14 @@ void Server::start() {
   waitConnections();
 }
 
+std::string Server::getPassword() {
+	return (this->password);
+}
+
+std::string Server::getHostname() {
+	return (this->hostName);
+}
+
 void Server::createSocket() {
   int fd = socket(AF_INET, SOCK_STREAM,
                   0);  // Creating the Socket: The socket is created using the
@@ -180,7 +188,7 @@ void Server::acceptConnection() {
   std::cout << "Client successfully connected on socket fd: " << clientSocket
             << std::endl;
   sendResponse(clientSocket,
-               "Register the yourself is mandatory to use the server, by "
+               "Register yourself is mandatory to use the server, by "
                "using: PASS, NICK and USER\r\n");
 }
 
