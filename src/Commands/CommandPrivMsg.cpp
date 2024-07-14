@@ -1,8 +1,9 @@
 #include "CommandPrivMsg.hpp"
+#include <vector>
 
 CommandPrivMsg::CommandPrivMsg() {}
 CommandPrivMsg::~CommandPrivMsg() {}
 void CommandPrivMsg::execute(int &clientSocket,
                              Client *client,
                              Server *server,
-                             std::string payload) {}
+                             std::vector<std::string> *params) {}

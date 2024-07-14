@@ -42,11 +42,11 @@ void Server::start() {
 }
 
 std::string Server::getPassword() {
-	return (this->password);
+  return (this->password);
 }
 
 std::string Server::getHostname() {
-	return (this->hostName);
+  return (this->hostName);
 }
 
 void Server::createSocket() {
@@ -231,7 +231,8 @@ void Server::readMessage(int i) {
       if (commandType != INVALID) {
         std::cout << "commandType " << commandType << std::endl;
         ICommand *command = commandFactory->createCommand(commandType);
-        command->execute(clientFd, currentClient, this, parser.getPayload());
+        std::vector<std::string> params = parser.getParams();
+        command->execute(clientFd, currentClient, this, &params);
         delete command;
       } else
         std::cerr << "Invalid message received!" << std::endl;

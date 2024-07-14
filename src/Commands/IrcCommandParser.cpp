@@ -1,40 +1,65 @@
 #include "IrcCommandParser.hpp"
+#include "utils.hpp"
 
-IrcCommandParser::IrcCommandParser(std::string rawBuffer) : buffer(rawBuffer) {
-  std::cout << "IrcCommandParser Parsing message: " << rawBuffer << std::endl;
-  if (buffer.length() > 0 && buffer[0] == '/')
-    buffer.erase(0, 1);
-  int i = 0;
-  for (i = 0; i < (int)buffer.length(); i++) {
-    if (isspace(buffer[i]) != 0 || buffer[i] == '\n')
-      break;
+void IrcCommandParser::tokenize(std::string buffer) {
+  std::vector<std::string> split_buffer = split(buffer);
+
+  if (split_buffer.size() < 1)
+    throw std::runtime_error("Empty Message.");
+
+  // Checking if the first token has a ':' or '/' and taking it out of the
+  // vector
+  if (split_buffer[0][0] == ':' || split_buffer[0][0] == '/') {
+    _command = split_buffer[0].substr(1);
+    split_buffer.erase(split_buffer.begin());
   }
-  command.append(buffer, 0, i);
-  std::cout << "Command identified:" << command << std::endl;
-  if (i != (int)buffer.length())
-    this->payload.append(buffer.begin() + i + 1, buffer.end());
-  else
-    this->payload.clear();
+
+  // Command should be stored in UPPER case format
+  _command = split_buffer[0];
+  std::transform(_command.begin(), _command.end(), _command.begin(), ::toupper);
+
+  // Rest of the tokens are the payload
+  for (size_t i = 1; i < split_buffer.size(); i++) {
+    // If the token starts with ':' everything after is a single parameter
+    if (split_buffer[i][0] == ':') {
+      std::string param = split_buffer[i].substr(1);
+      for (size_t k = i + 1; k < split_buffer.size(); k++)
+        param += " " + split_buffer[k];
+      _params.push_back(param);
+      break;
+    }
+    _params.push_back(split_buffer[i]);
+  }
+  return;
+}
+
+IrcCommandParser::IrcCommandParser(std::string rawBuffer) : _buffer(rawBuffer) {
+  try {
+    tokenize(_buffer);
+    std::cout << "Command identified: " << _command << std::endl;
+  } catch (std::exception &e) {
+    throw std::runtime_error("Parsing failed: " + std::string(e.what()));
+  }
 }
 
 IrcCommandParser::~IrcCommandParser() {}
 
 CommandType IrcCommandParser::getMessageType() {
-  if (command.compare("INVITE") == 0)
+  if (_command.compare("INVITE") == 0)
     return INVITE;
-  if (command.compare("KICK") == 0)
+  if (_command.compare("KICK") == 0)
     return KICK;
-  if (command.compare("MODE") == 0)
+  if (_command.compare("MODE") == 0)
     return MODE;
-  if (command.compare("TOPIC") == 0)
+  if (_command.compare("TOPIC") == 0)
     return TOPIC;
-  if (command.compare("JOIN") == 0)
+  if (_command.compare("JOIN") == 0)
     return JOIN;
-  if (command.compare("PART") == 0)
+  if (_command.compare("PART") == 0)
     return PART;
-  if (command.compare("PRIVMSG") == 0)
+  if (_command.compare("PRIVMSG") == 0)
     return PRIVMSG;
-  if (command.compare("PASS") == 0)
+  if (_command.compare("PASS") == 0)
     return PASS;
   return INVALID;
 }

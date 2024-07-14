@@ -10,7 +10,8 @@ class ICommand {
   virtual void execute(int &clientSocket,
                        Client *client,
                        Server *server,
-                       std::string payload) = 0;
+                       std::vector<std::string> *param) = 0;
+	virtual ~ICommand() {};
 };
 
 #endif

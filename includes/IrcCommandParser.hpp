@@ -5,15 +5,17 @@
 
 class IrcCommandParser {
  private:
-  std::string buffer;
-  std::string command;
-  std::string payload;
+  std::string _buffer;
+  std::string _command;
+  std::vector<std::string> _params;
+
+  void tokenize(std::string buffer);
 
  public:
   IrcCommandParser(std::string buffer);
   ~IrcCommandParser();
   CommandType getMessageType();
-  std::string getPayload() { return payload; };
+  std::vector<std::string> getParams() { return _params; };
 };
 
 #endif

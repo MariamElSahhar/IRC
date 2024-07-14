@@ -1,8 +1,9 @@
 #include "CommandTopic.hpp"
+#include <vector>
 
 CommandTopic::CommandTopic() {}
 CommandTopic::~CommandTopic() {}
 void CommandTopic::execute(int &clientSocket,
                            Client *client,
                            Server *server,
-                           std::string payload) {}
+                           std::vector<std::string> *params) {}

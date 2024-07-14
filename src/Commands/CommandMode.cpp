@@ -1,8 +1,9 @@
 #include "CommandMode.hpp"
+#include <vector>
 
 CommandMode::CommandMode() {}
 CommandMode::~CommandMode() {}
 void CommandMode::execute(int &clientSocket,
                           Client *client,
                           Server *server,
-                          std::string payload) {}
+                          std::vector<std::string> *params) {}

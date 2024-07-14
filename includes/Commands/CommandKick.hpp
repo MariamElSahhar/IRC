@@ -10,7 +10,7 @@ class CommandKick : public ICommand {
   void execute(int &clientSocket,
                Client *client,
                Server *server,
-               std::string payload);
+               std::vector<std::string> *params);
 };
 
 #endif

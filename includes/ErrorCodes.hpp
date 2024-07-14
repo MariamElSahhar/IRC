@@ -6,9 +6,9 @@
 #define RPL_CREATED(host, nick) (":" + host + " 003 " + nick + " :This server was created on 10/07/2024. \r\n")
 #define RPL_MYINFO(host, channelmodes, nick) (":" + host +  " 004 " + nick + " :Server " + host + " Version 1.0.0 - Channel modes: " + channelmodes + "\r\n")
 
-#define ERR_PASSWDMISMATCH(host) (":" + host + " 464 " + host + " :Password incorrect \r\n")
-#define ERR_NEEDMOREPARAMS(command, host) (":" + host + " 461 " + command + " :Not enough parameters \r\n")
-#define ERR_ALREADYREGISTERED(host) (":" + host + " 462 " + host + " :You may not reregister \r\n")
+#define ERR_PASSWDMISMATCH(host) (":" + host + " 464 " + host + " : Password incorrect \r\n")
+#define ERR_NEEDMOREPARAMS(command, host) (":" + host + " 461 " + command + " : Not enough parameters \r\n")
+#define ERR_ALREADYREGISTERED(host) (":" + host + " 462 " + host + " : You may not reregister \r\n")
 
 #define ERR_NOTREGISTERED(host) (":" + host + " 451 " + host + " :You have not registered \r\n")
 #define ERR_NONICKNAMEGIVEN(host) (":" + host + " 431 " + host + " :No nickname given \r\n")

@@ -2,20 +2,21 @@
 #include "Server.hpp"
 
 Client::Client(int fd, std::string ip) {
-    (void) fd;
-    (void) ip;
-    isAuthenticated = false; // using in PASS Command (setting to false in the begging and true after validation)
+  (void)fd;
+  (void)ip;
+  isAuthenticated = false;  // using in PASS Command (setting to false in the
+                            // begging and true after validation)
 }
 
 Client::~Client() {}
 
 void Client::authenticate() {
-    isAuthenticated = true;
+  isAuthenticated = true;
 }
 
 bool Client::getAuthentication() {
-    return (isAuthenticated);
-  }
+  return (isAuthenticated);
+}
 
 bool Client::isMessageReady() {
   return (!this->fullMessage.empty());
@@ -45,11 +46,7 @@ void Client::processMessage(const char *msg) {
       currentMessage);  // Append the current message to the full message
 
   if (!fullMessage.empty() &&
-      (fullMessage.back() == '\n' ||
-       fullMessage.back() ==
-           '\r'))  // Remove trailing newline or carriage return characters
-  {
-    fullMessage.pop_back();
-  }
+      (*fullMessage.rbegin() == '\n' || *fullMessage.rbegin() == '\r'))
+    fullMessage.erase(fullMessage.length() - 1);
   currentMessage.clear();  // Clear the current message
 }

@@ -10,7 +10,7 @@ class CommandPass : public ICommand {
   void execute(int &clientSocket,
                Client *client,
                Server *server,
-               std::string payload);
+               std::vector<std::string> *param);
 };
 
 #endif
