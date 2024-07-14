@@ -1,6 +1,4 @@
 #include "CommandPass.hpp"
-#include "ErrorCodes.hpp"
-#include "Server.hpp"
 
 CommandPass::CommandPass() {}
 CommandPass::~CommandPass() {}

@@ -42,6 +42,7 @@ public:
   std::string getHostname();
   void readMessage(int indexFd);
   void sendResponse(int clientSocket, std::string msg);
+  
   void cleanUp();
 
 private:

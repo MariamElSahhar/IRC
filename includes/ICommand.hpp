@@ -2,6 +2,7 @@
 #define ICOMMAND_HPP
 
 #include "Client.hpp"
+#include "ErrorCodes.hpp"
 
 class Server;
 

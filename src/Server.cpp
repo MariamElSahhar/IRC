@@ -133,6 +133,7 @@ void Server::waitConnections()
       cleanUp();
       break;
     }
+    // iterates over fds to check for an event
     for (unsigned int i = 0; i < pollFdVector.size(); i++) {
       if (pollFdVector[i].revents & POLLIN)  // check all sockets
       {

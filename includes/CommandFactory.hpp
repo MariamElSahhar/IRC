@@ -7,6 +7,7 @@
 #include "CommandMode.hpp"
 #include "CommandPart.hpp"
 #include "CommandPass.hpp"
+#include "CommandNick.hpp"
 #include "CommandPrivMsg.hpp"
 #include "CommandTopic.hpp"
 #include "ICommand.hpp"
@@ -22,7 +23,8 @@ enum CommandType {
   PART,  // check if needed
   PASS,
   PRIVMSG,
-  TOPIC
+  TOPIC,
+  NICK
 };
 
 class CommandFactory {

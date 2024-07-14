@@ -30,6 +30,10 @@ ICommand *CommandFactory::createCommand(CommandType cmdType) {
       break;
     case PASS:
       command = new CommandPass();
+      break;
+    case NICK:
+      command = new CommandNick();
+      break;
     default:
       break;
   }
