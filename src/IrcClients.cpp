@@ -36,3 +36,14 @@ IrcClients::~IrcClients() {
     mapSocketToClientInstance.clear();
   }
 }
+
+Client * IrcClients::getClientByNickname(const std::string &nickname) {
+  std::map<int, Client *>::iterator it;
+  for (it = mapSocketToClientInstance.begin();
+       it != mapSocketToClientInstance.end(); ++it) {
+    if (it->second->getNickname() == nickname) {
+      return (it->second);
+    }
+  }
+  return (NULL);
+}

@@ -42,9 +42,11 @@ public:
   std::string getHostname();
   void readMessage(int indexFd);
   void sendResponse(int clientSocket, std::string msg);
-  void cleanUp();
 
-private:
+  void cleanUp();
+  Client *getClientByNickname(const std::string &nickname);
+
+ private:
   int portNb;
   std::string password;
   std::string ipAddress;

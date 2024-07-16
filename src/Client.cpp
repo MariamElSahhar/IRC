@@ -5,7 +5,8 @@ Client::Client(int fd, std::string ip) {
   (void)fd;
   (void)ip;
   isAuthenticated = false;  // using in PASS Command (setting to false in the
-                            // begging and true after validation)
+                            // beginning and true after validation)
+  _nickname = "";
 }
 
 Client::~Client() {}
@@ -49,4 +50,14 @@ void Client::processMessage(const char *msg) {
       (*fullMessage.rbegin() == '\n' || *fullMessage.rbegin() == '\r'))
     fullMessage.erase(fullMessage.length() - 1);
   currentMessage.clear();  // Clear the current message
+}
+
+void Client::setNickname(std::string nickname)
+{
+  _nickname = nickname;
+}
+
+std::string Client::getNickname()
+{
+  return (_nickname);
 }
