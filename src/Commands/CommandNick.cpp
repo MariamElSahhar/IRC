@@ -5,8 +5,16 @@ CommandNick::CommandNick() {}
 CommandNick::~CommandNick() {}
 
 bool CommandNick::validate_nick(std::string nick) {
-  if (nick.empty())
-    return (false);
+  if (nick.length() < 2 || nick.length() > 15 ||
+      !isalpha(nick[0] || nick.find("--") != std::string::npos ||
+               nick.find("__") != std::string::npos)) {
+    return false;
+  }
+  for (size_t i = 0; i < nick.length(); ++i) {
+    if (!isalnum(nick[i]) && nick[i] != '-' && nick[i] != '_') {
+      return false;
+    }
+  }
   return (true);
 }
 
@@ -17,6 +25,7 @@ void CommandNick::execute(int &clientSocket,
   if (!client->getAuthentication()) {
     server->sendResponse(clientSocket,
                          ERR_NOTREGISTERED(server->getHostname()));
+    return;
   }
   if (params->size() < 1) {
     server->sendResponse(clientSocket,
@@ -24,19 +33,19 @@ void CommandNick::execute(int &clientSocket,
     return;
   }
 
-  std::string newNick = params->at(0);
-  if (!validate_nick(newNick)) {
+  std::string nick = params->at(0);
+  if (!validate_nick(nick)) {
     server->sendResponse(clientSocket,
-                         ERR_ERRONEUSNICKNAME(server->getHostname(), newNick));
+                         ERR_ERRONEUSNICKNAME(server->getHostname(), nick));
     return;
   }
-  if (server->findNick(newNick)) {
+  if (server->getClientByNickname(nick)) {
     server->sendResponse(clientSocket,
-                         ERR_ERRONEUSNICKNAME(server->getHostname(), newNick));
+                         ERR_NICKNAMEINUSE(server->getHostname(), nick));
     return;
   }
-  client->setNickname(newNick);
+  client->setNickname(nick);
 
-  std::string response = "Nickname set to " + newNick + "\r\n";
+  std::string response = "Nickname set to " + nick + "\r\n";
   server->sendResponse(clientSocket, response);
 }

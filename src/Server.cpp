@@ -254,3 +254,7 @@ void Server::cleanUp() {
     pollFdVector.clear();
   }
 }
+
+Client * Server::getClientByNickname(const std::string &nickname) {
+  return (ircClients->getClientByNickname(nickname));
+}
