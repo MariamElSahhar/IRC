@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = ircserv
-CXX = c++ -fsanitize=address
+CXX = c++ -g
 CXXFLAGS = -std=c++98 -Wall -Wextra #-Werror
 
 INC_PATH = ./includes/
@@ -51,7 +51,7 @@ run: $(NAME)
 	./$(NAME) $(INPUT_FILE)
 
 leak:	all
-	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME)
+	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME) 9999 pass
 
 .PHONY: all clean fclean re run
 

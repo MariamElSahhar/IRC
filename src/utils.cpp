@@ -3,8 +3,8 @@
 std::vector<std::string> split(std::string buffer) {
   std::vector<std::string> tokens;
   std::string currentToken;
-
   bool inToken = false;
+
   for (size_t i = 0; i < buffer.size(); i++) {
     if (buffer[i] != ' ' && buffer[i] != '\t' && buffer[i] != '\n' &&
         buffer[i] != '\r') {
@@ -20,8 +20,7 @@ std::vector<std::string> split(std::string buffer) {
     }
   }
   // If the last character was part of a token, add it to the result
-  if (!currentToken.empty()) {
+  if (!currentToken.empty())
     tokens.push_back(currentToken);
-  }
   return tokens;
 }

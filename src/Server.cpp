@@ -188,8 +188,8 @@ void Server::acceptConnection() {
   std::cout << "Client successfully connected on socket fd: " << clientSocket
             << std::endl;
   sendResponse(clientSocket,
-               "Register yourself is mandatory to use the server, by "
-               "using: PASS, NICK and USER\r\n");
+               "Registeration is mandatory to use the server -> "
+               "use: PASS, NICK and USER\r\n");
 }
 
 void Server::readMessage(int i) {
@@ -204,7 +204,7 @@ void Server::readMessage(int i) {
     else
       std::cerr << "Connection Error!" << std::endl;
 
-    //  deleting client that disconected
+    //  deleting client that disconnected
     if (!ircClients->removeClient(clientFd)) {
       std::cerr << "Failed to remove client!" << std::endl;
     }

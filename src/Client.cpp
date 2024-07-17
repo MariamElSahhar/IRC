@@ -2,10 +2,13 @@
 #include "Server.hpp"
 
 Client::Client(int fd, std::string ip) {
-  (void)fd;
-  (void)ip;
+  _socket = fd;
+  _server_hostname = ip;
+  _nickname = "";
+  _username = "";
+  _realname = "";
   isAuthenticated = false;  // using in PASS Command (setting to false in the
-                            // begging and true after validation)
+                            // beginnging and true after validation)
 }
 
 Client::~Client() {}
@@ -24,6 +27,22 @@ bool Client::isMessageReady() {
 
 std::string Client::getEntireMessage() {
   return (fullMessage);
+}
+
+std::string Client::get_nickname(void) const {
+  return _nickname;
+}
+
+std::string Client::get_username(void) const {
+  return _username;
+}
+
+std::string Client::get_hostname(void) const {
+  return _server_hostname;
+}
+
+std::string Client::get_realname(void) const {
+  return _realname;
 }
 
 void Client::messageHandler(char msg[]) {
@@ -49,4 +68,54 @@ void Client::processMessage(const char *msg) {
       (*fullMessage.rbegin() == '\n' || *fullMessage.rbegin() == '\r'))
     fullMessage.erase(fullMessage.length() - 1);
   currentMessage.clear();  // Clear the current message
+}
+
+void Client::reply(std::string code, std::string msg) {
+  std::string hostname_str = ":" + _server_hostname + " ";
+  std::string code_str;
+  std::string nickname_str;
+
+  if (code.empty())
+    code_str = "";
+  else
+    code_str = code + " ";
+
+  if (_nickname.empty())
+    nickname_str = "unregistered ";
+  else
+    nickname_str = _nickname + " ";
+
+  std::string reply = hostname_str + code_str + nickname_str + msg + "\r\n";
+  std::cout << "Reply: " << reply << std::endl;
+  send(_socket, reply.c_str(), reply.length(), 0);
+}
+
+void Client::broadcast(Client *sender,
+                       std::string command,
+                       std::string target,
+                       std::string message) {
+  // Client->Client or Client->Channel broadcast
+  std::string sender_str;
+  std::string command_str;
+  std::string target_str;
+  std::string message_str;
+
+  sender_str = ":" + sender->get_nickname() + "!" + sender->get_username() +
+               "@" + sender->get_hostname() + " ";
+  command_str = command + " ";
+  target_str = target + " ";
+  if (command == "KICK" || command == "INVITE" || message.empty() ||
+      message[0] == ':')
+    message_str = message;
+  else
+    message_str = ":" + message;
+
+  // Format ":<sender> <command> <target> :<message>\r\n"
+  std::string reply =
+      sender_str + command_str + target_str + message_str + "\r\n";
+
+  std::cout << "Broadcast: " << reply << std::endl;
+
+  send(_socket, reply.c_str(), reply.length(), 0);
+  return;
 }

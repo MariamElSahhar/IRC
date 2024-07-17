@@ -1,5 +1,4 @@
 #include "CommandPrivMsg.hpp"
-#include <vector>
 
 CommandPrivMsg::CommandPrivMsg() {}
 CommandPrivMsg::~CommandPrivMsg() {}
