@@ -115,6 +115,7 @@ void Server::createSocket() {
 void Server::waitConnections()
 // init pollfd struct and add server socket to the list
 {
+  int readStatus = 0;
   pollfd serverPollfd;
   std::string msg;
   serverPollfd.fd = socketNb;
@@ -141,7 +142,12 @@ void Server::waitConnections()
             socketNb)  // check any info has been received from socket
           acceptConnection();
         else  // the message is only read if the connection is acceptable
-          readMessage(i);
+          readStatus = readMessage(i);
+      }
+      if (readStatus == -1)
+      {
+        readStatus = 0;
+        continue;
       }
       // verify if write/send a message is possiblr
       if (pollFdVector[i].revents & POLLOUT) {
@@ -193,7 +199,7 @@ void Server::acceptConnection() {
                "using: PASS, NICK and USER\r\n");
 }
 
-void Server::readMessage(int i) {
+int Server::readMessage(int i) {
   int clientFd = pollFdVector[i].fd;
   char buffer[MAX_BUF];
   memset(buffer, 0, sizeof(buffer));
@@ -216,7 +222,7 @@ void Server::readMessage(int i) {
         break;
       }
     }
-    return;
+    return (-1);
   }
   std::cout << "Received: " << bytesRecv
             << " bytes Raw msg:" << std::string(buffer) << std::endl;
@@ -240,6 +246,7 @@ void Server::readMessage(int i) {
     }
   } else
     std::cerr << "Client not found!" << std::endl;
+    return (0);
 }
 
 void Server::cleanUp() {

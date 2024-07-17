@@ -40,7 +40,7 @@ public:
   void acceptConnection();
   std::string getPassword();
   std::string getHostname();
-  void readMessage(int indexFd);
+  int readMessage(int indexFd);
   void sendResponse(int clientSocket, std::string msg);
 
   void cleanUp();
