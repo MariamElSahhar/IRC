@@ -50,10 +50,10 @@ std::string Server::getHostname() {
 }
 
 void Server::createSocket() {
-  int fd = socket(AF_INET, SOCK_STREAM,
-                  0);  // Creating the Socket: The socket is created using the
-                       // socket() function with the parameters AF_INET (IPv4),
-                       // SOCK_STREAM (TCP), and 0 (default protocol for TCP).
+  int fd = socket(AF_INET, SOCK_STREAM, 0);
+  // Creating the Socket: The socket is created using the
+  // socket() function with the parameters AF_INET (IPv4),
+  // SOCK_STREAM (TCP), and 0 (default protocol for TCP).
   if (fd < 0) {
     std::cerr << "ERROR! Unable to create the socket!" << std::endl;
     exit(1);  // kill the program
@@ -91,8 +91,8 @@ void Server::createSocket() {
   // Bind the Socket: The socket is bound to the configured address and port
   // using the bind() function.
   sockaddr_in serverAddr;
-  memset(&serverAddr, 0, sizeof(serverAddr));
-  serverAddr.sin_family = AF_INET;
+  memset(&serverAddr, 0, sizeof(serverAddr)); // set all data to zero to avoid garbage
+  serverAddr.sin_family = AF_INET; // should be AF_INET to macht with the socket fd (IPV4)
   serverAddr.sin_addr.s_addr = inet_addr(ipAddress.c_str());
   serverAddr.sin_port = htons(portNb);
   if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
@@ -125,7 +125,6 @@ void Server::waitConnections()
 
   std::cout << "Waiting for clients..." << std::endl;
   signal(SIGINT, signalHandler);
-  // signal(SIGTSTP, signalHandler);
 
   while (true) {
     if (running == false)

@@ -34,7 +34,7 @@ public:
          CommandFactory *commandFactory);
   ~Server();
 
-  void start(); // do all to start server
+  void start(); // main function of the server (will create the sockets);
   void createSocket();
   void waitConnections();
   void acceptConnection();

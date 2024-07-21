@@ -14,7 +14,7 @@ class IrcClients {
   bool removeClient(int clientSocket);
 
  private:
-  std::map<int, Client *> mapSocketToClientInstance;
+  std::map<int, Client *> mapSocketToClientInstance; // int -> fd number of each Client
 };
 
 #endif
