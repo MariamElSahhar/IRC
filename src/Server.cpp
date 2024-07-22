@@ -94,16 +94,20 @@ void Server::createSocket() {
   memset(&serverAddr, 0, sizeof(serverAddr)); // set all data to zero to avoid garbage
   serverAddr.sin_family = AF_INET; // should be AF_INET to macht with the socket fd (IPV4)
   serverAddr.sin_addr.s_addr = inet_addr(ipAddress.c_str());
-  serverAddr.sin_port = htons(portNb);
+  serverAddr.sin_port = htons(portNb); //htons is a system conversion/manipulation
+
   if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
     close(fd);
-    std::cerr << "Error binding socket" << std::endl;
+    std::cerr << "Error while binding socket" << std::endl;
     exit(1);
   }
 
   // Listen for Connections: The socket is set to listen for incoming
   // connections using the listen() function, with a backlog of MAXCOUNT pending
-  // connections.
+  // connections. If our program was blocking, this function would block/suspend the
+  // thread. In our case we are using non blocking sockets this will not block.
+  // This means that the treatment of the connections will be made by poll.
+
   if (listen(fd, MAX_CON) < 0) {
     close(fd);
     std::cerr << "Error listening on socket." << std::endl;
@@ -119,7 +123,7 @@ void Server::waitConnections()
   pollfd serverPollfd;
   std::string msg;
   serverPollfd.fd = socketNb;
-  serverPollfd.events = POLLIN;
+  serverPollfd.events = POLLIN; // POLLIN: There is data to read.
   serverPollfd.revents = 0;
   pollFdVector.push_back(serverPollfd);
 
@@ -129,7 +133,14 @@ void Server::waitConnections()
   while (true) {
     if (running == false)
       break;
-    if (poll(pollFdVector.data(), pollFdVector.size(), 5) < 0) {
+
+    //int 5 int the ft below refers to the timeout argument that specifies the number of milliseconds that
+    // poll should block waiting for a file descriptor to become ready.  The call will block until either:
+    // •  a file descriptor becomes ready;
+    // •  the call is interrupted by a signal handler; or
+    // •  the timeout expires.
+    if (poll(pollFdVector.data(), pollFdVector.size(), 5) < 0)
+    {
       cleanUp();
       break;
     }
@@ -137,8 +148,7 @@ void Server::waitConnections()
     for (unsigned int i = 0; i < pollFdVector.size(); i++) {
       if (pollFdVector[i].revents & POLLIN)  // check all sockets
       {
-        if (pollFdVector[i].fd ==
-            socketNb)  // check any info has been received from socket
+        if (pollFdVector[i].fd == socketNb)  // check any info has been received from socket
           acceptConnection();
         else  // the message is only read if the connection is acceptable
           readStatus = readMessage(i);
@@ -148,7 +158,10 @@ void Server::waitConnections()
         readStatus = 0;
         continue;
       }
-      // verify if write/send a message is possiblr
+      // verify if write/send a message is possible. POLLOUT:  Writing is now possible, though a
+      // write larger than the available space in a socket or pipe will still block (unless O_NONBLOCK is set).
+      // Each client its own "pendingWrite", since we are dealing with a non blocking scenario
+      // "front" takes the oldest message of the client and after writing it, pop_front remove it from the "queue"
       if (pollFdVector[i].revents & POLLOUT) {
         Client *client = ircClients->getClient(pollFdVector[i].fd);
         if (client != NULL && !client->pendingWrite.empty()) {
