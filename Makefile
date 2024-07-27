@@ -51,7 +51,7 @@ run: $(NAME)
 	./$(NAME) $(INPUT_FILE)
 
 leak:	all
-	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME) 9999 pass
+	valgrind --leak-check=full --track-origins=yes --track-fds=yes --show-leak-kinds=all ./$(NAME) 9999 pass
 
 .PHONY: all clean fclean re run
 

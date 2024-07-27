@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstdlib>
 #include "Client.hpp"
 #include "CommandFactory.hpp"
 #include "IrcClients.hpp"
@@ -80,7 +79,7 @@ int main(int argc, char **argv) {
                                // depending on the command type (PASS, MODE,
                                // etc)
     Server server(portNumber, password, ircClients,
-                  commandFactory);  // this is the most impostant class, which
+                  commandFactory);  // this is the most important class, which
                                     // is reponsible for opening the socket and
                                     // waiting for connections
     server.start();  // here we will start the server and keep waiting and

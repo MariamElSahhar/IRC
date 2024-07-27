@@ -27,6 +27,13 @@
 #define HOSTNAME "127.0.0.1"
 #define IP_BIND "127.0.0.1"
 
+// Color Macros
+#define RESET "\e[m"
+#define RED "\e[31m"
+#define GREEN "\e[32m"
+#define YELLOW "\e[33m"
+#define CYAN "\e[36m"
+
 class CommandFactory;
 
 class Server {
@@ -38,7 +45,7 @@ class Server {
   ~Server();
 
   void start();  // do all to start server
-  void createSocket();
+  void createSocket(int fd);
   void waitConnections();
   void acceptConnection();
   std::string getPassword();
@@ -49,10 +56,10 @@ class Server {
 
  private:
   int portNb;
+  int socketNb;
   std::string password;
   std::string ipAddress;
   std::string hostName;
-  int socketNb;
   std::vector<pollfd> pollFdVector;
   IrcClients *ircClients;
   CommandFactory *commandFactory;

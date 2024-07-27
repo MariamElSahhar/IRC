@@ -29,7 +29,7 @@ Server::Server(int port,
       pollFdVector(),
       ircClients(ircClients),
       commandFactory(commandFactory) {
-  std::cout << "Starting IRC Server ..." << std::endl;
+  std::cout << std::endl << CYAN "Starting IRC Server ..." RESET << std::endl;
 }
 
 Server::~Server() {
@@ -37,8 +37,22 @@ Server::~Server() {
 }
 
 void Server::start() {
-  createSocket();
-  waitConnections();
+  int fd = 0;
+
+  try {
+    createSocket(fd);
+  } catch (std::exception &e) {
+    std::cerr << RED << e.what() << RESET << std::endl;
+    if (fd)
+      close(fd);
+    exit(EXIT_FAILURE);
+  }
+  try {
+    waitConnections();
+  } catch (std::exception &e) {
+    std::cerr << RED << e.what() << RESET << std::endl;
+    cleanUp();
+  }
 }
 
 std::string Server::getPassword() {
@@ -49,44 +63,25 @@ std::string Server::getHostname() {
   return (this->hostName);
 }
 
-void Server::createSocket() {
-  int fd = socket(AF_INET, SOCK_STREAM,
-                  0);  // Creating the Socket: The socket is created using the
-                       // socket() function with the parameters AF_INET (IPv4),
-                       // SOCK_STREAM (TCP), and 0 (default protocol for TCP).
-  if (fd < 0) {
-    std::cerr << "ERROR! Unable to create the socket!" << std::endl;
-    exit(1);  // kill the program
-  }
+void Server::createSocket(int fd) {
+  // Creating the Socket: The socket is created using the socket()
+  // function with parameters IPv4, TCP, and 0 (default protocol for TCP).
+  fd = socket(AF_INET, SOCK_STREAM, 0);
+  if (fd < 0)
+    throw std::runtime_error("Error creating socket.");
 
-  /*
-  Setting SO_REUSEADDR: The socket option SO_REUSEADDR is set using the
-  setsockopt() function. This allows the socket to reuse the local address if it
-  is already in use. The setsockopt() function is called with the parameters
-  SOL_SOCKET (socket level), SO_REUSEADDR (socket option), and a pointer to the
-  value reuse (set to 1).
-  */
+  // The setsockopt() function is called with the parameters:
+  // - SOL_SOCKET: The socket level.
+  // - SO_REUSEADDR: The socket option to reuse the local address.
+  // - &enable: A pointer to the value to set the option to (1).
   int enable = 1;
-  if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0) {
-    close(fd);
-    std::cerr << "ERROR! Socket was not cleared!" << std::endl;
-    exit(1);
-  }
+  if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0)
+    throw std::runtime_error("Error Socket was not cleared.");
 
-  /*
-  O_NONBLOCK is a flag used to set a file descriptor, such as a socket, to
-  non-blocking mode. When a file descriptor is in non-blocking mode, operations
-  on it, like reading or writing, will return immediately without waiting for
-  the operation to complete. This is particularly useful in network programming,
-  where you don't want your application to be blocked waiting for I/O operations
-  to complete.
-  */
-  if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0) {
-    close(fd);
-    std::cerr << "ERROR! Error setting socket to non-blocking mode!"
-              << std::endl;
-    exit(1);
-  }
+  // The fcntl() function is used to set the fd (socket) to non-blocking mode
+  // using the O_NONBLOCK flag.
+  if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
+    throw std::runtime_error("Error setting socket to non-blocking mode.");
 
   // Bind the Socket: The socket is bound to the configured address and port
   // using the bind() function.
@@ -95,54 +90,43 @@ void Server::createSocket() {
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_addr.s_addr = inet_addr(ipAddress.c_str());
   serverAddr.sin_port = htons(portNb);
-  if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
-    close(fd);
-    std::cerr << "Error binding socket" << std::endl;
-    exit(1);
-  }
+  if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+    throw std::runtime_error("Error binding socket");
 
-  // Listen for Connections: The socket is set to listen for incoming
-  // connections using the listen() function, with a backlog of MAXCOUNT pending
-  // connections.
-  if (listen(fd, MAX_CON) < 0) {
-    close(fd);
-    std::cerr << "Error listening on socket." << std::endl;
-    exit(1);
-  }
+  // The socket is set to listen for incoming connections (passive) using the
+  // listen() function, with a backlog of MAXCOUNT pending connections.
+  if (listen(fd, MAX_CON) < 0)
+    throw std::runtime_error("Error listening on socket.");
   socketNb = fd;
 }
 
-void Server::waitConnections()
-// init pollfd struct and add server socket to the list
-{
+void Server::waitConnections() {
+  // Initializing pollfd struct and add server socket to the list
   pollfd serverPollfd;
-  std::string msg;
   serverPollfd.fd = socketNb;
   serverPollfd.events = POLLIN;
   serverPollfd.revents = 0;
   pollFdVector.push_back(serverPollfd);
 
-  std::cout << "Waiting for clients..." << std::endl;
+  std::string msg;
+
+  std::cout << std::endl << YELLOW "Waiting for clients ..." RESET << std::endl;
   signal(SIGINT, signalHandler);
-  // signal(SIGTSTP, signalHandler);
 
   while (true) {
     if (running == false)
-      break;
-    if (poll(pollFdVector.data(), pollFdVector.size(), 5) < 0) {
-      cleanUp();
-      break;
-    }
+      throw std::runtime_error("Server stopped by user.");
+    if (poll(pollFdVector.data(), pollFdVector.size(), 5) < 0)
+      throw std::runtime_error("Error polling.");
     for (unsigned int i = 0; i < pollFdVector.size(); i++) {
       if (pollFdVector[i].revents & POLLIN)  // check all sockets
       {
-        if (pollFdVector[i].fd ==
-            socketNb)  // check any info has been received from socket
+        if (pollFdVector[i].fd == socketNb)  // checks info received from socket
           acceptConnection();
         else  // the message is only read if the connection is acceptable
           readMessage(i);
       }
-      // verify if write/send a message is possiblr
+      // verify if write/send a message is possible
       if (pollFdVector[i].revents & POLLOUT) {
         Client *client = ircClients->getClient(pollFdVector[i].fd);
         if (client != NULL && !client->pendingWrite.empty()) {
