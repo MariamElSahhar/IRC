@@ -5,16 +5,14 @@ CommandNick::CommandNick() {}
 CommandNick::~CommandNick() {}
 
 bool CommandNick::validate_nick(std::string nick) {
+  std::cout << nick << std::endl;
   if (nick.length() < 2 || nick.length() > 15 ||
-      !isalpha(nick[0] || nick.find("--") != std::string::npos ||
-               nick.find("__") != std::string::npos)) {
+      !isalpha(nick[0]) || nick.find("--") != std::string::npos ||
+               nick.find("__") != std::string::npos) {
     return (false);
   }
   for (size_t i = 0; i < nick.length(); ++i) {
-    if (!(isalnum(nick[i]) || nick[i] == '-' || nick[i] == '_'
-       || nick[i] == '{' || nick[i] == '}' || nick[i] == '[' || nick[i] == ']'
-       || nick[i] == '\\'
-       || nick[i] == '|')) {
+    if (!isalnum(nick[i]) && nick[i] != '-' && nick[i] != '_') {
       return (false);
     }
   }
