@@ -50,8 +50,8 @@ void Server::start() {
   try {
     waitConnections();
   } catch (std::exception &e) {
-    std::cerr << RED << e.what() << RESET << std::endl;
     cleanUp();
+    std::cerr << std::endl << RED << e.what() << RESET << std::endl;
   }
 }
 
@@ -86,12 +86,14 @@ void Server::createSocket(int fd) {
   // Bind the Socket: The socket is bound to the configured address and port
   // using the bind() function.
   sockaddr_in serverAddr;
-  memset(&serverAddr, 0, sizeof(serverAddr));
-  serverAddr.sin_family = AF_INET;
+  memset(&serverAddr, 0, sizeof(serverAddr));  // Clear the struct
+  serverAddr.sin_family =
+      AF_INET;  // We use AF_INET to match with the socket FD (IPv4)
   serverAddr.sin_addr.s_addr = inet_addr(ipAddress.c_str());
-  serverAddr.sin_port = htons(portNb);
+  serverAddr.sin_port =
+      htons(portNb);  // htons is a system conversion/manipulation
   if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
-    throw std::runtime_error("Error binding socket");
+    throw std::runtime_error("Error while binding socket");
 
   // The socket is set to listen for incoming connections (passive) using the
   // listen() function, with a backlog of MAXCOUNT pending connections.
@@ -104,27 +106,39 @@ void Server::waitConnections() {
   // Initializing pollfd struct and add server socket to the list
   pollfd serverPollfd;
   serverPollfd.fd = socketNb;
-  serverPollfd.events = POLLIN;
+  serverPollfd.events = POLLIN;  // POLLIN: There is data to read.
   serverPollfd.revents = 0;
   pollFdVector.push_back(serverPollfd);
 
   std::string msg;
+  int readStatus = 0;
 
   std::cout << std::endl << YELLOW "Waiting for clients ..." RESET << std::endl;
   signal(SIGINT, signalHandler);
 
   while (true) {
     if (running == false)
-      throw std::runtime_error("Server stopped by user.");
+      throw std::runtime_error("Server stopped.");
+    // int 5 int the ft below refers to the timeout argument that specifies the
+    // number of milliseconds that poll should block waiting for a file
+    // descriptor to become ready.
+    // The call will block until either:
+    // •  a file descriptor becomes ready;
+    // •  the call is interrupted by a signal handler;
+    // •  the timeout expires.
     if (poll(pollFdVector.data(), pollFdVector.size(), 5) < 0)
-      throw std::runtime_error("Error polling.");
+      throw std::runtime_error("Server stopped.");
     for (unsigned int i = 0; i < pollFdVector.size(); i++) {
       if (pollFdVector[i].revents & POLLIN)  // check all sockets
       {
         if (pollFdVector[i].fd == socketNb)  // checks info received from socket
           acceptConnection();
         else  // the message is only read if the connection is acceptable
-          readMessage(i);
+          readStatus = readMessage(i);
+      }
+      if (readStatus == -1) {
+        readStatus = 0;
+        continue;
       }
       // verify if write/send a message is possible
       if (pollFdVector[i].revents & POLLOUT) {
@@ -145,6 +159,10 @@ void Server::sendResponse(int clientSocket, std::string msg) {
     client->pendingWrite.push_back(msg);
 }
 
+Client *Server::getClientByNickname(const std::string &nickname) {
+  return (ircClients->getClientByNickname(nickname));
+}
+
 void Server::acceptConnection() {
   // create info for new client and new socket
   sockaddr_in clientAddr;
@@ -153,7 +171,7 @@ void Server::acceptConnection() {
 
   int clientSocket = accept(socketNb, (sockaddr *)&clientAddr, &clientSize);
   if (clientSocket < 0) {
-    std::cerr << " Connection can not be established with new client"
+    std::cerr << "Connection can not be established with new client"
               << std::endl;
     return;
   }
@@ -169,22 +187,22 @@ void Server::acceptConnection() {
   std::string ipClient = inet_ntoa(clientAddr.sin_addr);
   ircClients->createClient(clientSocket, ipClient);
 
-  std::cout << "Client successfully connected on socket fd: " << clientSocket
-            << std::endl;
+  std::cout << GREEN "Client successfully connected on socket fd: " RESET
+            << clientSocket << std::endl;
   sendResponse(clientSocket,
                "Registeration is mandatory to use the server -> "
                "use: PASS, NICK and USER\r\n");
 }
 
-void Server::readMessage(int i) {
+int Server::readMessage(int i) {
   int clientFd = pollFdVector[i].fd;
   char buffer[MAX_BUF];
   memset(buffer, 0, sizeof(buffer));
   int bytesRecv = recv(clientFd, buffer, sizeof(buffer), 0);
   if (bytesRecv <= 0) {
     if (bytesRecv == 0)  // only when close terminal
-      std::cerr << "Client disconnected from socket fd: " << clientFd
-                << std::endl;
+      std::cerr << YELLOW "Client disconnected from socket fd: " RESET
+                << clientFd << std::endl;
     else
       std::cerr << "Connection Error!" << std::endl;
 
@@ -199,7 +217,7 @@ void Server::readMessage(int i) {
         break;
       }
     }
-    return;
+    return -1;
   }
   std::cout << "Received: " << bytesRecv
             << " bytes Raw msg:" << std::string(buffer) << std::endl;
@@ -208,9 +226,9 @@ void Server::readMessage(int i) {
     currentClient->messageHandler(buffer);
     if (currentClient->isMessageReady()) {
       std::cout << "Message ready to be processed: "
-                << currentClient->getEntireMessage() << std::endl;
+                << currentClient->get_EntireMessage() << std::endl;
       IrcCommandParser parser =
-          IrcCommandParser(std::string(currentClient->getEntireMessage()));
+          IrcCommandParser(std::string(currentClient->get_EntireMessage()));
       CommandType commandType = parser.getMessageType();
       if (commandType != INVALID) {
         std::cout << "commandType " << commandType << std::endl;
@@ -223,6 +241,21 @@ void Server::readMessage(int i) {
     }
   } else
     std::cerr << "Client not found!" << std::endl;
+  return 0;
+}
+
+void Server::add_channel(Channel *channel) {
+  _channels.push_back(channel);
+}
+
+Channel *Server::get_channel(std::string name) {
+  // if name doesn't end in ":hostname", append ":hostname"
+  if (name.find(":") == std::string::npos)
+    name += ":" + hostName;
+  for (size_t i = 0; i < _channels.size(); i++)
+    if (_channels[i]->get_name() == name)
+      return _channels[i];
+  return NULL;
 }
 
 void Server::cleanUp() {

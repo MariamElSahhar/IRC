@@ -7,25 +7,30 @@ Client::Client(int fd, std::string ip) {
   _nickname = "";
   _username = "";
   _realname = "";
-  isAuthenticated = false;  // using in PASS Command (setting to false in the
-                            // beginnging and true after validation)
+  _operator = false;
+  _authenticated = false;  // using in PASS Command (setting to false in the
+                           // beginnging and true after validation)
 }
 
 Client::~Client() {}
 
 void Client::authenticate() {
-  isAuthenticated = true;
+  _authenticated = true;
 }
 
-bool Client::getAuthentication() {
-  return (isAuthenticated);
+bool Client::get_Authentication() const {
+  return (_authenticated);
+}
+
+bool Client::is_operator(void) const {
+  return _operator;
 }
 
 bool Client::isMessageReady() {
   return (!this->fullMessage.empty());
 }
 
-std::string Client::getEntireMessage() {
+std::string Client::get_EntireMessage() {
   return (fullMessage);
 }
 
@@ -43,6 +48,27 @@ std::string Client::get_hostname(void) const {
 
 std::string Client::get_realname(void) const {
   return _realname;
+}
+
+void Client::set_nickname(std::string nickname) {
+  _nickname = nickname;
+}
+
+void Client::set_username(std::string username) {
+  _username = username;
+}
+
+void Client::set_realname(std::string realname) {
+  _realname = realname;
+}
+
+void Client::set_operator(std::string oper_password) {
+  if (oper_password == g_oper_password)
+    _operator = true;
+}
+
+void Client::unset_operator() {
+	_operator = false;
 }
 
 void Client::messageHandler(char msg[]) {

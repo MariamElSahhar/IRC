@@ -2,8 +2,6 @@
 #define CHANNELL_HPP
 
 #include "Client.hpp"
-#include "ErrorCodes.hpp"
-#include "Server.hpp"
 
 class Channel {
  private:

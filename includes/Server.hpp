@@ -1,7 +1,6 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include <algorithm>
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <netdb.h>
@@ -11,6 +10,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <algorithm>
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
@@ -19,6 +19,7 @@
 #include <map>
 #include <utility>
 #include <vector>
+#include "Channel.hpp"
 #include "CommandFactory.hpp"
 #include "IrcClients.hpp"
 
@@ -44,15 +45,20 @@ class Server {
          CommandFactory *commandFactory);
   ~Server();
 
-  void start();  // do all to start server
+  void start();  // Main function to create Sockets
   void createSocket(int fd);
   void waitConnections();
   void acceptConnection();
   std::string getPassword();
   std::string getHostname();
-  void readMessage(int indexFd);
+
+  Channel *get_channel(std::string name);
+  void add_channel(Channel *channel);
+
+  int readMessage(int indexFd);
   void sendResponse(int clientSocket, std::string msg);
   void cleanUp();
+  Client *getClientByNickname(const std::string &nickname);
 
  private:
   int portNb;
@@ -63,6 +69,7 @@ class Server {
   std::vector<pollfd> pollFdVector;
   IrcClients *ircClients;
   CommandFactory *commandFactory;
+  std::vector<Channel *> _channels;
 
   Server();
   Server(Server const &);
