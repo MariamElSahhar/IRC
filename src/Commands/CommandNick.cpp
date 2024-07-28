@@ -8,11 +8,14 @@ bool CommandNick::validate_nick(std::string nick) {
   if (nick.length() < 2 || nick.length() > 15 ||
       !isalpha(nick[0] || nick.find("--") != std::string::npos ||
                nick.find("__") != std::string::npos)) {
-    return false;
+    return (false);
   }
   for (size_t i = 0; i < nick.length(); ++i) {
-    if (!isalnum(nick[i]) && nick[i] != '-' && nick[i] != '_') {
-      return false;
+    if (!(isalnum(nick[i]) || nick[i] == '-' || nick[i] == '_'
+       || nick[i] == '{' || nick[i] == '}' || nick[i] == '[' || nick[i] == ']'
+       || nick[i] == '\\'
+       || nick[i] == '|')) {
+      return (false);
     }
   }
   return (true);
