@@ -1,5 +1,4 @@
 #include "CommandMode.hpp"
-#include <vector>
 
 CommandMode::CommandMode() {}
 CommandMode::~CommandMode() {}

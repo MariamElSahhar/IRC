@@ -29,7 +29,7 @@ Server::Server(int port,
       pollFdVector(),
       ircClients(ircClients),
       commandFactory(commandFactory) {
-  std::cout << "Starting IRC Server ..." << std::endl;
+  std::cout << std::endl << CYAN "Starting IRC Server ..." RESET << std::endl;
 }
 
 Server::~Server() {
@@ -37,8 +37,22 @@ Server::~Server() {
 }
 
 void Server::start() {
-  createSocket();
-  waitConnections();
+  int fd = 0;
+
+  try {
+    createSocket(fd);
+  } catch (std::exception &e) {
+    std::cerr << RED << e.what() << RESET << std::endl;
+    if (fd)
+      close(fd);
+    exit(EXIT_FAILURE);
+  }
+  try {
+    waitConnections();
+  } catch (std::exception &e) {
+    cleanUp();
+    std::cerr << std::endl << RED << e.what() << RESET << std::endl;
+  }
 }
 
 std::string Server::getPassword() {
@@ -49,119 +63,90 @@ std::string Server::getHostname() {
   return (this->hostName);
 }
 
-void Server::createSocket() {
-  int fd = socket(AF_INET, SOCK_STREAM, 0);
-  // Creating the Socket: The socket is created using the
-  // socket() function with the parameters AF_INET (IPv4),
-  // SOCK_STREAM (TCP), and 0 (default protocol for TCP).
-  if (fd < 0) {
-    std::cerr << "ERROR! Unable to create the socket!" << std::endl;
-    exit(1);  // kill the program
-  }
+void Server::createSocket(int fd) {
+  // Creating the Socket: The socket is created using the socket()
+  // function with parameters IPv4, TCP, and 0 (default protocol for TCP).
+  fd = socket(AF_INET, SOCK_STREAM, 0);
+  if (fd < 0)
+    throw std::runtime_error("Error creating socket.");
 
-  /*
-  Setting SO_REUSEADDR: The socket option SO_REUSEADDR is set using the
-  setsockopt() function. This allows the socket to reuse the local address if it
-  is already in use. The setsockopt() function is called with the parameters
-  SOL_SOCKET (socket level), SO_REUSEADDR (socket option), and a pointer to the
-  value reuse (set to 1).
-  */
+  // The setsockopt() function is called with the parameters:
+  // - SOL_SOCKET: The socket level.
+  // - SO_REUSEADDR: The socket option to reuse the local address.
+  // - &enable: A pointer to the value to set the option to (1).
   int enable = 1;
-  if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0) {
-    close(fd);
-    std::cerr << "ERROR! Socket was not cleared!" << std::endl;
-    exit(1);
-  }
+  if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0)
+    throw std::runtime_error("Error Socket was not cleared.");
 
-  /*
-  O_NONBLOCK is a flag used to set a file descriptor, such as a socket, to
-  non-blocking mode. When a file descriptor is in non-blocking mode, operations
-  on it, like reading or writing, will return immediately without waiting for
-  the operation to complete. This is particularly useful in network programming,
-  where you don't want your application to be blocked waiting for I/O operations
-  to complete.
-  */
-  if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0) {
-    close(fd);
-    std::cerr << "ERROR! Error setting socket to non-blocking mode!"
-              << std::endl;
-    exit(1);
-  }
+  // The fcntl() function is used to set the fd (socket) to non-blocking mode
+  // using the O_NONBLOCK flag.
+  if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
+    throw std::runtime_error("Error setting socket to non-blocking mode.");
 
   // Bind the Socket: The socket is bound to the configured address and port
   // using the bind() function.
   sockaddr_in serverAddr;
-  memset(&serverAddr, 0, sizeof(serverAddr)); // set all data to zero to avoid garbage
-  serverAddr.sin_family = AF_INET; // should be AF_INET to macht with the socket fd (IPV4)
+  memset(&serverAddr, 0, sizeof(serverAddr));  // Clear the struct
+  serverAddr.sin_family =
+      AF_INET;  // We use AF_INET to match with the socket FD (IPv4)
   serverAddr.sin_addr.s_addr = inet_addr(ipAddress.c_str());
-  serverAddr.sin_port = htons(portNb); //htons is a system conversion/manipulation
+  serverAddr.sin_port =
+      htons(portNb);  // htons is a system conversion/manipulation
+  if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+    throw std::runtime_error("Error while binding socket");
 
-  if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
-    close(fd);
-    std::cerr << "Error while binding socket" << std::endl;
-    exit(1);
-  }
-
-  // Listen for Connections: The socket is set to listen for incoming
-  // connections using the listen() function, with a backlog of MAXCOUNT pending
-  // connections. If our program was blocking, this function would block/suspend the
-  // thread. In our case we are using non blocking sockets this will not block.
-  // This means that the treatment of the connections will be made by poll.
-
-  if (listen(fd, MAX_CON) < 0) {
-    close(fd);
-    std::cerr << "Error listening on socket." << std::endl;
-    exit(1);
-  }
+	// Listen for Connections: The socket is set to listen for incoming
+	// connections using the listen() function, with a backlog of MAXCOUNT pending
+	// connections. If our program was blocking, this function would block/suspend the
+	// thread. In our case we are using non blocking sockets this will not block.
+	// This means that the treatment of the connections will be made by poll.
+	if (listen(fd, MAX_CON) < 0)
+    throw std::runtime_error("Error listening on socket.");
   socketNb = fd;
 }
 
-void Server::waitConnections()
-// init pollfd struct and add server socket to the list
-{
-  int readStatus = 0;
+void Server::waitConnections() {
+  // Initializing pollfd struct and add server socket to the list
   pollfd serverPollfd;
-  std::string msg;
   serverPollfd.fd = socketNb;
-  serverPollfd.events = POLLIN; // POLLIN: There is data to read.
+  serverPollfd.events = POLLIN;  // POLLIN: There is data to read.
   serverPollfd.revents = 0;
   pollFdVector.push_back(serverPollfd);
 
-  std::cout << "Waiting for clients..." << std::endl;
+  std::string msg;
+  int readStatus = 0;
+
+  std::cout << std::endl << YELLOW "Waiting for clients ..." RESET << std::endl;
   signal(SIGINT, signalHandler);
 
   while (true) {
     if (running == false)
-      break;
-
-    //int 5 int the ft below refers to the timeout argument that specifies the number of milliseconds that
-    // poll should block waiting for a file descriptor to become ready.  The call will block until either:
+      throw std::runtime_error("Server stopped.");
+    // int 5 int the ft below refers to the timeout argument that specifies the
+    // number of milliseconds that poll should block waiting for a file
+    // descriptor to become ready.
+    // The call will block until either:
     // •  a file descriptor becomes ready;
-    // •  the call is interrupted by a signal handler; or
+    // •  the call is interrupted by a signal handler;
     // •  the timeout expires.
     if (poll(pollFdVector.data(), pollFdVector.size(), 5) < 0)
-    {
-      cleanUp();
-      break;
-    }
-    // iterates over fds to check for an event
+      throw std::runtime_error("Server stopped.");
     for (unsigned int i = 0; i < pollFdVector.size(); i++) {
       if (pollFdVector[i].revents & POLLIN)  // check all sockets
       {
-        if (pollFdVector[i].fd == socketNb)  // check any info has been received from socket
+        if (pollFdVector[i].fd == socketNb)  // checks info received from socket
           acceptConnection();
         else  // the message is only read if the connection is acceptable
           readStatus = readMessage(i);
       }
-      if (readStatus == -1)
-      {
+      if (readStatus == -1) {
         readStatus = 0;
         continue;
       }
-      // verify if write/send a message is possible. POLLOUT:  Writing is now possible, though a
-      // write larger than the available space in a socket or pipe will still block (unless O_NONBLOCK is set).
-      // Each client its own "pendingWrite", since we are dealing with a non blocking scenario
-      // "front" takes the oldest message of the client and after writing it, pop_front remove it from the "queue"
+		// verify if write/send a message is possible. POLLOUT:  Writing is now possible, though a
+		// write larger than the available space in a socket or pipe will still block (unless O_NONBLOCK is set).
+		// Each client its own "pendingWrite", since we are dealing with a non blocking scenario
+		// "front" takes the oldest message of the client and after writing it, pop_front remove it from the "queue"
       if (pollFdVector[i].revents & POLLOUT) {
         Client *client = ircClients->getClient(pollFdVector[i].fd);
         if (client != NULL && !client->pendingWrite.empty()) {
@@ -180,6 +165,10 @@ void Server::sendResponse(int clientSocket, std::string msg) {
     client->pendingWrite.push_back(msg);
 }
 
+Client *Server::getClientByNickname(const std::string &nickname) {
+  return (ircClients->getClientByNickname(nickname));
+}
+
 void Server::acceptConnection() {
   // create info for new client and new socket
   sockaddr_in clientAddr;
@@ -188,7 +177,7 @@ void Server::acceptConnection() {
 
   int clientSocket = accept(socketNb, (sockaddr *)&clientAddr, &clientSize);
   if (clientSocket < 0) {
-    std::cerr << " Connection can not be established with new client"
+    std::cerr << "Connection can not be established with new client"
               << std::endl;
     return;
   }
@@ -204,11 +193,11 @@ void Server::acceptConnection() {
   std::string ipClient = inet_ntoa(clientAddr.sin_addr);
   ircClients->createClient(clientSocket, ipClient);
 
-  std::cout << "Client successfully connected on socket fd: " << clientSocket
-            << std::endl;
+  std::cout << GREEN "Client successfully connected on socket fd: " RESET
+            << clientSocket << std::endl;
   sendResponse(clientSocket,
-               "Register yourself is mandatory to use the server, by "
-               "using: PASS, NICK and USER\r\n");
+               "Registeration is mandatory to use the server -> "
+               "use: PASS, NICK and USER\r\n");
 }
 
 int Server::readMessage(int i) {
@@ -218,12 +207,12 @@ int Server::readMessage(int i) {
   int bytesRecv = recv(clientFd, buffer, sizeof(buffer), 0);
   if (bytesRecv <= 0) {
     if (bytesRecv == 0)  // only when close terminal
-      std::cerr << "Client disconnected from socket fd: " << clientFd
-                << std::endl;
+      std::cerr << YELLOW "Client disconnected from socket fd: " RESET
+                << clientFd << std::endl;
     else
       std::cerr << "Connection Error!" << std::endl;
 
-    //  deleting client that disconected
+    //  deleting client that disconnected
     if (!ircClients->removeClient(clientFd)) {
       std::cerr << "Failed to remove client!" << std::endl;
     }
@@ -243,9 +232,9 @@ int Server::readMessage(int i) {
     currentClient->messageHandler(buffer);
     if (currentClient->isMessageReady()) {
       std::cout << "Message ready to be processed: "
-                << currentClient->getEntireMessage() << std::endl;
+                << currentClient->get_EntireMessage() << std::endl;
       IrcCommandParser parser =
-          IrcCommandParser(std::string(currentClient->getEntireMessage()));
+          IrcCommandParser(std::string(currentClient->get_EntireMessage()));
       CommandType commandType = parser.getMessageType();
       if (commandType != INVALID) {
         std::cout << "commandType " << commandType << std::endl;
@@ -258,7 +247,21 @@ int Server::readMessage(int i) {
     }
   } else
     std::cerr << "Client not found!" << std::endl;
-    return (0);
+  return 0;
+}
+
+void Server::add_channel(Channel *channel) {
+  _channels.push_back(channel);
+}
+
+Channel *Server::get_channel(std::string name) {
+  // if name doesn't end in ":hostname", append ":hostname"
+  if (name.find(":") == std::string::npos)
+    name += ":" + hostName;
+  for (size_t i = 0; i < _channels.size(); i++)
+    if (_channels[i]->get_name() == name)
+      return _channels[i];
+  return NULL;
 }
 
 void Server::cleanUp() {
@@ -272,8 +275,4 @@ void Server::cleanUp() {
     }
     pollFdVector.clear();
   }
-}
-
-Client * Server::getClientByNickname(const std::string &nickname) {
-  return (ircClients->getClientByNickname(nickname));
 }

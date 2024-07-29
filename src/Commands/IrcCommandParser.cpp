@@ -7,8 +7,7 @@ void IrcCommandParser::tokenize(std::string buffer) {
   if (split_buffer.size() < 1)
     throw std::runtime_error("Empty Message.");
 
-  // Checking if the first token has a ':' or '/' and taking it out of the
-  // vector
+  // Checking if the first token has a ':' or '/' and taking it out of vector
   if (split_buffer[0][0] == ':' || split_buffer[0][0] == '/') {
     _command = split_buffer[0].substr(1);
     split_buffer.erase(split_buffer.begin());

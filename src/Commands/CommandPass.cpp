@@ -1,4 +1,6 @@
 #include "CommandPass.hpp"
+#include "Server.hpp"
+
 
 CommandPass::CommandPass() {}
 CommandPass::~CommandPass() {}
@@ -15,7 +17,7 @@ void CommandPass::execute(int &clientSocket,
   }
 
   // check if it is not in use yet (if it was already authenticated):
-  if (client->getAuthentication() == true) {
+  if (client->get_Authentication() == true) {
     server->sendResponse(clientSocket,
                          ERR_ALREADYREGISTERED(server->getHostname()));
     return;

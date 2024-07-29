@@ -1,5 +1,4 @@
 #include "CommandInvite.hpp"
-#include <vector>
 
 CommandInvite::CommandInvite() {}
 CommandInvite::~CommandInvite() {}

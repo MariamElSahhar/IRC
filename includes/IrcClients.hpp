@@ -10,7 +10,7 @@ class IrcClients {
   ~IrcClients();
   void createClient(int clientSocket, std::string ipClient);
   Client *getClient(int clientSocket);
-  Client *getClientByNickname(const std::string &nickname);
+	Client *getClientByNickname(const std::string &nickname);
   bool removeClient(int clientSocket);
 
  private:
