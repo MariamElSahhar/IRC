@@ -255,6 +255,17 @@ void Server::cleanUp() {
   }
 }
 
-Client * Server::getClientByNickname(const std::string &nickname) {
+Client *Server::getClientByNickname(const std::string &nickname) {
   return (ircClients->getClientByNickname(nickname));
+}
+
+void Server::registerClient(int &clientSocket, Client *client) {
+  sendResponse(clientSocket,
+               RPL_WELCOME(client->getNickname(), getHostname(), "prefix"));
+  sendResponse(clientSocket,
+               RPL_YOURHOST(getHostname(), client->getNickname()));
+  sendResponse(clientSocket, RPL_CREATED(getHostname(), client->getNickname()));
+  sendResponse(clientSocket, RPL_MYINFO(getHostname(), "channel modes",
+                                        client->getNickname()));
+  client->registerClient();
 }

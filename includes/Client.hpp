@@ -14,8 +14,10 @@ class Client {
   bool isMessageReady();
   std::string getEntireMessage();
   std::deque<std::string> pendingWrite;
+
   void authenticate();
   bool getAuthentication();
+  void registerClient();
 
   // User data
   void setNickname(std::string nickname);
@@ -35,6 +37,7 @@ class Client {
   std::string _servername;
 
   bool isAuthenticated;
+  bool isRegistered;
 
   void processMessage(const char *msg);
 };

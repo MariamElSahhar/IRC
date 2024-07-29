@@ -34,6 +34,9 @@ ICommand *CommandFactory::createCommand(CommandType cmdType) {
     case NICK:
       command = new CommandNick();
       break;
+    case USER:
+      command = new CommandUser();
+      break;
     default:
       break;
   }

@@ -1,6 +1,9 @@
 #include "CommandUser.hpp"
 
-std::string parse_realname(std::vector<std::string> &params) {
+CommandUser::CommandUser() {}
+CommandUser::~CommandUser() {}
+
+std::string CommandUser::parse_realname(std::vector<std::string> &params) {
   std::string realname = "";
   for (size_t i = 3; i < params.size(); ++i) {
     if (i > 3) {
@@ -18,6 +21,7 @@ std::string parse_realname(std::vector<std::string> &params) {
 
   return realname;
 }
+
 bool CommandUser::allow_username(int &clientSocket,
                                  Client *client,
                                  Server *server,
@@ -46,6 +50,7 @@ bool CommandUser::allow_username(int &clientSocket,
                          ERR_NEEDMOREPARAMS("USER", server->getHostname()));
     return (false);
   }
+  return (true);
 }
 
 void CommandUser::execute(int &clientSocket,
@@ -72,7 +77,5 @@ void CommandUser::execute(int &clientSocket,
   // assigning parameters to client attributes
   client->setUsername(username);
   client->setRealname(realname);
-
-  std::string response = "Username set to " + username + "\r\n";
-  server->sendResponse(clientSocket, response);
+  server->registerClient(clientSocket, client);
 }

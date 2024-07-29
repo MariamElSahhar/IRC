@@ -6,6 +6,9 @@ Client::Client(int fd, std::string ip) {
   (void)ip;
   isAuthenticated = false;  // using in PASS Command (setting to false in the
                             // beginning and true after validation)
+  // true after user using NICK and USER Commands
+  isRegistered = false;
+  // user attributes
   _nickname = "";
   _username = "";
   _hostname = "";
@@ -14,6 +17,10 @@ Client::Client(int fd, std::string ip) {
 }
 
 Client::~Client() {}
+
+void Client::registerClient() {
+  isRegistered = true;
+}
 
 void Client::authenticate() {
   isAuthenticated = true;
@@ -56,32 +63,26 @@ void Client::processMessage(const char *msg) {
   currentMessage.clear();  // Clear the current message
 }
 
-void Client::setNickname(std::string nickname)
-{
+void Client::setNickname(std::string nickname) {
   _nickname = nickname;
 }
 
-std::string Client::getNickname()
-{
+std::string Client::getNickname() {
   return (_nickname);
 }
 
-void Client::setUsername(std::string username)
-{
+void Client::setUsername(std::string username) {
   _username = username;
 }
 
-std::string Client::getUsername()
-{
+std::string Client::getUsername() {
   return (_username);
 }
 
-void Client::setRealname(std::string realname)
-{
+void Client::setRealname(std::string realname) {
   _realname = realname;
 }
 
-std::string Client::getRealname()
-{
+std::string Client::getRealname() {
   return (_realname);
 }
