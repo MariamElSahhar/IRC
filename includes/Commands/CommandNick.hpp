@@ -2,6 +2,7 @@
 #define COMMANDNICK_HPP
 
 #include "ICommand.hpp"
+#include "Server.hpp"
 
 class CommandNick : public ICommand {
  public:

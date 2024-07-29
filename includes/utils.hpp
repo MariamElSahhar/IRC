@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <vector>
 #include <string>
+#include <iostream>
 
 std::vector<std::string> split(std::string message);
 

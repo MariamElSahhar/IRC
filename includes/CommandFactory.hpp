@@ -24,7 +24,7 @@ enum CommandType {
   PASS,
   PRIVMSG,
   TOPIC,
-	NICK
+  NICK
 };
 
 class CommandFactory {

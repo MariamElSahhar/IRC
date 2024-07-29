@@ -2,6 +2,7 @@
 #define COMMANDPASS_HPP
 
 #include "ICommand.hpp"
+#include "Server.hpp"
 
 class CommandPass : public ICommand {
  public:

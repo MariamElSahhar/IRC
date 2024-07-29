@@ -45,17 +45,18 @@ class Server {
          CommandFactory *commandFactory);
   ~Server();
 
-  void start();  // Main function to create Sockets
+  void start(); // main function of the server (will create the sockets);
   void createSocket(int fd);
   void waitConnections();
   void acceptConnection();
   std::string getPassword();
   std::string getHostname();
+  int readMessage(int indexFd);
+
 
   Channel *get_channel(std::string name);
   void add_channel(Channel *channel);
 
-  int readMessage(int indexFd);
   void sendResponse(int clientSocket, std::string msg);
   void cleanUp();
   Client *getClientByNickname(const std::string &nickname);

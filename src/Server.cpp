@@ -95,9 +95,12 @@ void Server::createSocket(int fd) {
   if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     throw std::runtime_error("Error while binding socket");
 
-  // The socket is set to listen for incoming connections (passive) using the
-  // listen() function, with a backlog of MAXCOUNT pending connections.
-  if (listen(fd, MAX_CON) < 0)
+	// Listen for Connections: The socket is set to listen for incoming
+	// connections using the listen() function, with a backlog of MAXCOUNT pending
+	// connections. If our program was blocking, this function would block/suspend the
+	// thread. In our case we are using non blocking sockets this will not block.
+	// This means that the treatment of the connections will be made by poll.
+	if (listen(fd, MAX_CON) < 0)
     throw std::runtime_error("Error listening on socket.");
   socketNb = fd;
 }
@@ -140,7 +143,10 @@ void Server::waitConnections() {
         readStatus = 0;
         continue;
       }
-      // verify if write/send a message is possible
+		// verify if write/send a message is possible. POLLOUT:  Writing is now possible, though a
+		// write larger than the available space in a socket or pipe will still block (unless O_NONBLOCK is set).
+		// Each client its own "pendingWrite", since we are dealing with a non blocking scenario
+		// "front" takes the oldest message of the client and after writing it, pop_front remove it from the "queue"
       if (pollFdVector[i].revents & POLLOUT) {
         Client *client = ircClients->getClient(pollFdVector[i].fd);
         if (client != NULL && !client->pendingWrite.empty()) {
@@ -217,7 +223,7 @@ int Server::readMessage(int i) {
         break;
       }
     }
-    return -1;
+    return (-1);
   }
   std::cout << "Received: " << bytesRecv
             << " bytes Raw msg:" << std::string(buffer) << std::endl;
