@@ -14,6 +14,12 @@ class CommandUser : public ICommand {
                std::vector<std::string> *params);
 
  private:
+  std::string parse_realname(std::vector<std::string> &params);
+  bool validate_username(std::string username);
+  bool allow_username(int &clientSocket,
+                      Client *client,
+                      Server *server,
+                      std::vector<std::string> *params);
 };
 
 #endif

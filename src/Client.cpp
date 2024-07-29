@@ -7,6 +7,10 @@ Client::Client(int fd, std::string ip) {
   isAuthenticated = false;  // using in PASS Command (setting to false in the
                             // beginning and true after validation)
   _nickname = "";
+  _username = "";
+  _hostname = "";
+  _servername = "";
+  _realname = "";
 }
 
 Client::~Client() {}
