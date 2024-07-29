@@ -16,13 +16,21 @@ class Client {
   std::deque<std::string> pendingWrite;
   void authenticate();
   bool getAuthentication();
+
+  // User data
   void setNickname(std::string nickname);
   std::string getNickname();
+  void setUsername(std::string username);
+  std::string getUsername();
+  void setRealname(std::string realname);
+  std::string getRealname();
 
  private:
   std::string fullMessage;
   std::string currentMessage;
   std::string _nickname;
+  std::string _realname;
+  std::string _username;
 
   bool isAuthenticated;
 

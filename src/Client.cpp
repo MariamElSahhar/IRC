@@ -61,3 +61,23 @@ std::string Client::getNickname()
 {
   return (_nickname);
 }
+
+void Client::setUsername(std::string username)
+{
+  _username = username;
+}
+
+std::string Client::getUsername()
+{
+  return (_username);
+}
+
+void Client::setRealname(std::string realname)
+{
+  _realname = realname;
+}
+
+std::string Client::getRealname()
+{
+  return (_realname);
+}

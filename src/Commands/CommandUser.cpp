@@ -11,15 +11,16 @@ void CommandUser::execute(int &clientSocket,
   }
   if (params->size() < 4) {
     server->sendResponse(clientSocket,
-                         ERR_NEEDMOREPARAMS("NICK", server->getHostname()));
+                         ERR_NEEDMOREPARAMS("USER", server->getHostname()));
     return;
   }
 
-  std::string nick = params->at(0);
+  std::string username = params->at(0);
+  std::string realname = params->at(4);
 
-  client->setUsername(nick);
-  client->setRealname(nick);
+  client->setUsername(username);
+  client->setRealname(realname);
 
-  std::string response = "Nickname set to " + nick + "\r\n";
+  std::string response = "Username set to " + username + "\r\n";
   server->sendResponse(clientSocket, response);
 }
