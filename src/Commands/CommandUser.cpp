@@ -26,6 +26,12 @@ bool CommandUser::allow_username(int &clientSocket,
                                  Client *client,
                                  Server *server,
                                  std::vector<std::string> *params) {
+  // if USER already set
+  if (client->getRegistration()) {
+    server->sendResponse(clientSocket,
+                         ERR_ALREADYREGISTERED(server->getHostname()));
+    return (false);
+  }
   // if PASS isn't set
   if (!client->getAuthentication()) {
     server->sendResponse(clientSocket,
@@ -36,12 +42,6 @@ bool CommandUser::allow_username(int &clientSocket,
   if (client->getNickname().empty()) {
     server->sendResponse(clientSocket,
                          ERR_NONICKNAMEGIVEN(server->getHostname()));
-    return (false);
-  }
-  // if USER already set
-  if (!client->getUsername().empty()) {
-    server->sendResponse(clientSocket,
-                         ERR_ALREADYREGISTERED(server->getHostname()));
     return (false);
   }
   // wrong number of parameteres

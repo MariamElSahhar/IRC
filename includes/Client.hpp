@@ -18,6 +18,7 @@ class Client {
   void authenticate();
   bool getAuthentication();
   void registerClient();
+  bool getRegistration();
 
   // User data
   void setNickname(std::string nickname);

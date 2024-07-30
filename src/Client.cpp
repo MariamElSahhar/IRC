@@ -30,6 +30,10 @@ bool Client::getAuthentication() {
   return (isAuthenticated);
 }
 
+bool Client::getRegistration() {
+  return (isRegistered);
+}
+
 bool Client::isMessageReady() {
   return (!this->fullMessage.empty());
 }
