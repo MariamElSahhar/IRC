@@ -265,7 +265,6 @@ void Server::registerClient(int &clientSocket, Client *client) {
   sendResponse(clientSocket,
                RPL_YOURHOST(getHostname(), client->getNickname()));
   sendResponse(clientSocket, RPL_CREATED(getHostname(), client->getNickname()));
-  sendResponse(clientSocket, RPL_MYINFO(getHostname(), "channel modes",
-                                        client->getNickname()));
+  sendResponse(clientSocket, RPL_MYINFO(getHostname(), client->getNickname()));
   client->registerClient();
 }
