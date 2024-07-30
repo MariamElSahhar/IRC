@@ -261,7 +261,7 @@ Client *Server::getClientByNickname(const std::string &nickname) {
 
 void Server::registerClient(int &clientSocket, Client *client) {
   sendResponse(clientSocket,
-               RPL_WELCOME(client->getNickname(), getHostname(), "prefix"));
+               RPL_WELCOME(client->getNickname(), getHostname()));
   sendResponse(clientSocket,
                RPL_YOURHOST(getHostname(), client->getNickname()));
   sendResponse(clientSocket, RPL_CREATED(getHostname(), client->getNickname()));

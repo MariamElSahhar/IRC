@@ -27,6 +27,10 @@ class Client {
   std::string getUsername();
   void setRealname(std::string realname);
   std::string getRealname();
+  void setHostname(std::string hostname);
+  std::string getHostname();
+  void setServername(std::string servername);
+  std::string getServername();
 
  private:
   std::string fullMessage;

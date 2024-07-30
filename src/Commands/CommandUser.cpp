@@ -77,5 +77,7 @@ void CommandUser::execute(int &clientSocket,
   // assigning parameters to client attributes
   client->setUsername(username);
   client->setRealname(realname);
+  client->setHostname(hostname);
+  client->setServername(servername);
   server->registerClient(clientSocket, client);
 }

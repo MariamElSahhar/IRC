@@ -90,3 +90,19 @@ void Client::setRealname(std::string realname) {
 std::string Client::getRealname() {
   return (_realname);
 }
+
+void Client::setHostname(std::string hostname) {
+  _hostname = hostname;
+}
+
+std::string Client::getHostname() {
+  return (_hostname);
+}
+
+void Client::setServername(std::string servername) {
+  _servername = servername;
+}
+
+std::string Client::getServername() {
+  return (_servername);
+}
