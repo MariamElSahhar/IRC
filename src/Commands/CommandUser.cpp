@@ -22,10 +22,10 @@ std::string CommandUser::parse_realname(std::vector<std::string> &params) {
   return realname;
 }
 
-bool CommandUser::allow_username(int &clientSocket,
+bool CommandUser::validate_command(int &clientSocket,
                                  Client *client,
                                  Server *server,
-                                 std::vector<std::string> *params) {
+                                 std::vector<std::string> &params) {
   // if USER already set
   if (client->getRegistration()) {
     server->sendResponse(clientSocket,
@@ -45,7 +45,13 @@ bool CommandUser::allow_username(int &clientSocket,
     return (false);
   }
   // wrong number of parameteres
-  if (params->size() < 4) {
+  if (params.size() < 4) {
+    server->sendResponse(clientSocket,
+                         ERR_NEEDMOREPARAMS("USER", server->getHostname()));
+    return (false);
+  }
+  // realname must be prefixed by :
+  if (params.at(3)[0] != ':') {
     server->sendResponse(clientSocket,
                          ERR_NEEDMOREPARAMS("USER", server->getHostname()));
     return (false);
@@ -57,8 +63,8 @@ void CommandUser::execute(int &clientSocket,
                           Client *client,
                           Server *server,
                           std::vector<std::string> *params) {
-  if (!allow_username(clientSocket, client, server, params))
-    return;
+  if (!validate_command(clientSocket, client, server, *params))
+    return ;
 
   // assigning parameters to variables
   std::string username = params->at(0);
