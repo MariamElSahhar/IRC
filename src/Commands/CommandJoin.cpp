@@ -9,16 +9,16 @@ void CommandJoin::execute(int &clientSocket,
                           Server *server,
                           std::vector<std::string> *params) {
   // Check if client is authenticated AND **registered** ->> to be implemented
-  if (client->get_Authentication() == true && client->is_registered() == true) {
+  if (client->is_authenticated() == true && client->is_registered() == true) {
     if (params->size() < 1) {
       server->sendResponse(clientSocket,
-                           ERR_NEEDMOREPARAMS("JOIN", server->getHostname()));
+                           ERR_NEEDMOREPARAMS("JOIN", server->get_hostname()));
       return;
     }
     std::string channel_name = (*params)[0];
     if (channel_name[0] != '#') {
       server->sendResponse(clientSocket,
-                           ERR_NOSUCHCHANNEL("JOIN", server->getHostname()));
+                           ERR_NOSUCHCHANNEL("JOIN", server->get_hostname()));
       return;
     }
     Channel *channel = server->get_channel(channel_name);
@@ -29,8 +29,8 @@ void CommandJoin::execute(int &clientSocket,
         return;
       }
       server->sendResponse(
-          clientSocket, ERR_NOSUCHCHANNEL(channel_name, server->getHostname()));
-      channel = new Channel(channel_name, server->getHostname(), *server);
+          clientSocket, ERR_NOSUCHCHANNEL(channel_name, server->get_hostname()));
+      channel = new Channel(channel_name, server->get_hostname(), *server);
       server->add_channel(channel);
       channel->increase_user_quantity();
       channel->join(client);
@@ -41,7 +41,7 @@ void CommandJoin::execute(int &clientSocket,
       if (channel->has_client(client)) {
         server->sendResponse(clientSocket,
                              ERR_USERONCHANNEL("JOIN", channel->get_name(),
-                                               server->getHostname()));
+                                               server->get_hostname()));
         return;
       }
       // Check if the client has the necessary permissions to join
@@ -73,5 +73,5 @@ void CommandJoin::execute(int &clientSocket,
     channel->names(client);
   } else
     server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->getHostname()));
+                         ERR_NOTREGISTERED(server->get_hostname()));
 }

@@ -23,39 +23,39 @@ std::string CommandUser::parse_realname(std::vector<std::string> &params) {
 }
 
 bool CommandUser::validate_command(int &clientSocket,
-                                 Client *client,
-                                 Server *server,
-                                 std::vector<std::string> &params) {
+                                   Client *client,
+                                   Server *server,
+                                   std::vector<std::string> &params) {
   // if USER already set
-  if (client->getRegistration()) {
+  if (client->is_registered()) {
     server->sendResponse(clientSocket,
-                         ERR_ALREADYREGISTERED(server->getHostname()));
+                         ERR_ALREADYREGISTERED(server->get_hostname()));
     return (false);
   }
   // if PASS isn't set
-  if (!client->getAuthentication()) {
+  if (!client->is_authenticated()) {
     server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->getHostname()));
+                         ERR_NOTREGISTERED(server->get_hostname()));
     return (false);
   }
   // if NICK isn't set
-  if (client->getNickname().empty()) {
+  if (client->get_nickname().empty()) {
     server->sendResponse(clientSocket,
-                         ERR_NONICKNAMEGIVEN(server->getHostname()));
+                         ERR_NONICKNAMEGIVEN(server->get_hostname()));
     return (false);
   }
   // wrong number of parameteres
   if (params.size() < 4) {
     server->sendResponse(clientSocket,
-                         ERR_NEEDMOREPARAMS("USER", server->getHostname()));
+                         ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
     return (false);
   }
   // realname must be prefixed by :
-  if (params.at(3)[0] != ':') {
-    server->sendResponse(clientSocket,
-                         ERR_NEEDMOREPARAMS("USER", server->getHostname()));
-    return (false);
-  }
+  // if (params.at(3)[0] != ':') {
+  //   server->sendResponse(clientSocket,
+  //                        ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
+  //   return (false);
+  // }
   return (true);
 }
 
@@ -64,7 +64,7 @@ void CommandUser::execute(int &clientSocket,
                           Server *server,
                           std::vector<std::string> *params) {
   if (!validate_command(clientSocket, client, server, *params))
-    return ;
+    return;
 
   // assigning parameters to variables
   std::string username = params->at(0);
@@ -76,14 +76,14 @@ void CommandUser::execute(int &clientSocket,
   if (username.empty() || hostname.empty() || servername.empty() ||
       realname.empty()) {
     server->sendResponse(clientSocket,
-                         ERR_NEEDMOREPARAMS("USER", server->getHostname()));
+                         ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
     return;
   }
 
   // assigning parameters to client attributes
-  client->setUsername(username);
-  client->setRealname(realname);
-  client->setHostname(hostname);
-  client->setServername(servername);
+  client->set_username(username);
+  client->set_realname(realname);
+  client->set_hostname(hostname);
+  client->set_servername(servername);
   server->registerClient(clientSocket, client);
 }

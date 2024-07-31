@@ -23,14 +23,17 @@ class Client {
   std::string get_realname(void) const;
   std::string get_username(void) const;
   std::string get_hostname(void) const;
+  std::string get_servername(void) const;
   int get_socket(void) const;
-  bool get_Authentication(void) const;
   bool is_operator(void) const;
+  bool is_authenticated(void) const;
   bool is_registered(void) const;
 
   void set_nickname(std::string nickname);
   void set_realname(std::string realname);
   void set_username(std::string username);
+  void set_servername(std::string servername);
+  void set_hostname(std::string hostname);
   void set_operator(std::string oper_password);
   void unset_operator(void);
 
@@ -39,7 +42,6 @@ class Client {
   void authenticate();
   void register_client(void);
   void registerClient();
-  bool getRegistration();
 
   // User data
   void reply(std::string code, std::string msg);
@@ -47,14 +49,6 @@ class Client {
                  std::string command,
                  std::string target,
                  std::string message);
-  void setUsername(std::string username);
-  std::string getUsername();
-  void setRealname(std::string realname);
-  std::string getRealname();
-  void setHostname(std::string hostname);
-  std::string getHostname();
-  void setServername(std::string servername);
-  std::string getServername();
 
  private:
   Server *_server;

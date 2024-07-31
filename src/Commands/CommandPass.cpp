@@ -10,14 +10,14 @@ void CommandPass::execute(int &clientSocket,
   // check if the format of the password is valid:
   if (param->size() < 1) {
     server->sendResponse(clientSocket,
-                         ERR_NEEDMOREPARAMS("PASS", server->getHostname()));
+                         ERR_NEEDMOREPARAMS("PASS", server->get_hostname()));
     return;
   }
 
   // check if it is not in use yet (if it was already authenticated):
-  if (client->get_Authentication() == true) {
+  if (client->is_authenticated() == true) {
     server->sendResponse(clientSocket,
-                         ERR_ALREADYREGISTERED(server->getHostname()));
+                         ERR_ALREADYREGISTERED(server->get_hostname()));
     return;
   }
 
@@ -26,5 +26,5 @@ void CommandPass::execute(int &clientSocket,
     client->authenticate();
   else
     server->sendResponse(clientSocket,
-                         ERR_PASSWDMISMATCH(server->getHostname()));
+                         ERR_PASSWDMISMATCH(server->get_hostname()));
 }

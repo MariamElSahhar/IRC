@@ -8,6 +8,7 @@ Client::Client(int fd,  Server &server, std::string ip) {
   _server_hostname = ip;
   (void)fd;
   (void)ip;
+
   _nickname = "";
   _username = "";
   _hostname = "";
@@ -42,7 +43,7 @@ bool Client::is_registered(void) const {
 	return _registered;
 }
 
-bool Client::get_Authentication() const {
+bool Client::is_authenticated() const {
   return (_authenticated);
 }
 
@@ -54,41 +55,12 @@ bool Client::is_operator(void) const {
   return _operator;
 }
 
-
 bool Client::isMessageReady() {
   return (!this->fullMessage.empty());
 }
 
 std::string Client::get_EntireMessage() {
   return (fullMessage);
-}
-
-std::string Client::get_nickname(void) const {
-  return _nickname;
-}
-
-std::string Client::get_username(void) const {
-  return _username;
-}
-
-std::string Client::get_hostname(void) const {
-  return _server_hostname;
-}
-
-std::string Client::get_realname(void) const {
-  return _realname;
-}
-
-void Client::set_nickname(std::string nickname) {
-  _nickname = nickname;
-}
-
-void Client::set_username(std::string username) {
-  _username = username;
-}
-
-void Client::set_realname(std::string realname) {
-  _realname = realname;
 }
 
 void Client::set_operator(std::string oper_password) {
@@ -145,44 +117,72 @@ void Client::reply(std::string code, std::string msg) {
   send(_socket, reply.c_str(), reply.length(), 0);
 }
 
-void Client::setNickname(std::string nickname)
-{
+std::string Client::get_servername() const{
+  return (_servername);
+}
+
+std::string Client::get_nickname(void) const {
+  return _nickname;
+}
+
+std::string Client::get_username(void) const {
+  return _username;
+}
+
+std::string Client::get_hostname(void) const {
+  return _server_hostname;
+}
+
+std::string Client::get_realname(void) const {
+  return _realname;
+}
+
+void Client::set_nickname(std::string nickname) {
   _nickname = nickname;
 }
 
-std::string Client::getNickname()
-{
-  return (_nickname);
-}
-
-void Client::setUsername(std::string username) {
+void Client::set_username(std::string username) {
   _username = username;
 }
 
-std::string Client::getUsername() {
-  return (_username);
-}
-
-void Client::setRealname(std::string realname) {
+void Client::set_realname(std::string realname) {
   _realname = realname;
 }
 
-std::string Client::getRealname() {
-  return (_realname);
-}
-
-void Client::setHostname(std::string hostname) {
-  _hostname = hostname;
-}
-
-std::string Client::getHostname() {
-  return (_hostname);
-}
-
-void Client::setServername(std::string servername) {
+void Client::set_servername(std::string servername) {
   _servername = servername;
 }
 
-std::string Client::getServername() {
-  return (_servername);
+void Client::set_hostname(std::string hostname) {
+  _hostname = hostname;
+}
+
+void Client::broadcast(Client *sender,
+                       std::string command,
+                       std::string target,
+                       std::string message) {
+  // Client->Client or Client->Channel broadcast
+  std::string sender_str;
+  std::string command_str;
+  std::string target_str;
+  std::string message_str;
+
+  sender_str = ":" + sender->get_nickname() + "!" + sender->get_username() +
+               "@" + sender->get_hostname() + " ";
+  command_str = command + " ";
+  target_str = target + " ";
+  if (command == "KICK" || command == "INVITE" || message.empty() ||
+      message[0] == ':')
+    message_str = message;
+  else
+    message_str = ":" + message;
+
+  // Format ":<sender> <command> <target> :<message>\r\n"
+  std::string reply =
+      sender_str + command_str + target_str + message_str + "\r\n";
+
+  std::cout << "Broadcast: " << reply << std::endl;
+
+  send(_socket, reply.c_str(), reply.length(), 0);
+  return;
 }

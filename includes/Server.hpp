@@ -51,7 +51,7 @@ class Server {
   void waitConnections();
   void acceptConnection();
   std::string getPassword();
-  std::string getHostname();
+  std::string get_hostname();
   int readMessage(int indexFd);
 
 
