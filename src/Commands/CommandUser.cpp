@@ -4,7 +4,7 @@ CommandUser::CommandUser() {}
 CommandUser::~CommandUser() {}
 
 std::string CommandUser::parse_realname(std::vector<std::string> &params) {
-  std::string realname = "";
+  std::string realname;
   for (size_t i = 3; i < params.size(); ++i) {
     if (i > 3) {
       realname += " ";
@@ -13,10 +13,10 @@ std::string CommandUser::parse_realname(std::vector<std::string> &params) {
   }
 
   if (!realname.empty() && realname[0] == ':') {
-    realname.erase(realname.begin());
+    realname = realname.substr(1);
   }
   if (!realname.empty() && realname[realname.size() - 1] == ':') {
-    realname.pop_back();
+    realname = realname.substr(0, realname.size() - 1);
   }
   return realname;
 }
