@@ -12,13 +12,12 @@ std::string CommandUser::parse_realname(std::vector<std::string> &params) {
     realname += params[i];
   }
 
-  if (!realname.empty() && realname.front() == ':') {
+  if (!realname.empty() && realname[0] == ':') {
     realname.erase(realname.begin());
   }
-  if (!realname.empty() && realname.back() == ':') {
+  if (!realname.empty() && realname[realname.size() - 1] == ':') {
     realname.pop_back();
   }
-
   return realname;
 }
 
