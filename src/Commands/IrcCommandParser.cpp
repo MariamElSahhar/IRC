@@ -61,5 +61,7 @@ CommandType IrcCommandParser::getMessageType() {
     return PASS;
   if (_command.compare("NICK") == 0)
     return NICK;
+  if (_command.compare("USER") == 0)
+    return USER;
   return INVALID;
 }

@@ -60,7 +60,7 @@ std::string Server::getPassword() {
   return (this->password);
 }
 
-std::string Server::getHostname() {
+std::string Server::get_hostname() {
   return (this->hostName);
 }
 
@@ -164,10 +164,6 @@ void Server::sendResponse(int clientSocket, std::string msg) {
   Client *client = ircClients->getClient(clientSocket);
   if (client != NULL)
     client->pendingWrite.push_back(msg);
-}
-
-Client *Server::getClientByNickname(const std::string &nickname) {
-  return (ircClients->getClientByNickname(nickname));
 }
 
 void Server::acceptConnection() {
@@ -276,4 +272,18 @@ void Server::cleanUp() {
     }
     pollFdVector.clear();
   }
+}
+
+Client *Server::getClientByNickname(const std::string &nickname) {
+  return (ircClients->getClientByNickname(nickname));
+}
+
+void Server::registerClient(int &clientSocket, Client *client) {
+  sendResponse(clientSocket,
+               RPL_WELCOME(client->get_nickname(), get_hostname()));
+  sendResponse(clientSocket,
+               RPL_YOURHOST(get_hostname(), client->get_nickname()));
+  sendResponse(clientSocket, RPL_CREATED(get_hostname(), client->get_nickname()));
+  sendResponse(clientSocket, RPL_MYINFO(get_hostname(), client->get_nickname()));
+  client->registerClient();
 }

@@ -143,7 +143,7 @@ void Channel::set_mode(char mode,
       if (params.size() < 3) {
         server.sendResponse(
             client->get_socket(),
-            ERR_NEEDMOREPARAMS(channel_name, server.getHostname()));
+            ERR_NEEDMOREPARAMS(channel_name, server.get_hostname()));
         break;
       }
       _pass = params[2];
@@ -154,7 +154,7 @@ void Channel::set_mode(char mode,
       if (params.size() < 3) {
         server.sendResponse(
             client->get_socket(),
-            ERR_NEEDMOREPARAMS(channel_name, server.getHostname()));
+            ERR_NEEDMOREPARAMS(channel_name, server.get_hostname()));
         break;
       }
       target_name = params[2];
@@ -162,7 +162,7 @@ void Channel::set_mode(char mode,
       if (!this->has_client(target)) {
         server.sendResponse(client->get_socket(),
                             ERR_USERNOTINCHANNEL(target_name, channel_name,
-                                                 server.getHostname()));
+                                                 server.get_hostname()));
         break;
       }
       if (this->is_channel_operator(target_name)) {
@@ -177,7 +177,7 @@ void Channel::set_mode(char mode,
       if (params.size() < 3) {
         server.sendResponse(
             client->get_socket(),
-            ERR_NEEDMOREPARAMS(channel_name, server.getHostname()));
+            ERR_NEEDMOREPARAMS(channel_name, server.get_hostname()));
         break;
       }
       limit_param = params[2];
@@ -229,7 +229,7 @@ void Channel::unset_mode(char mode,
       if (params.size() < 3) {
         server.sendResponse(
             client->get_socket(),
-            ERR_NEEDMOREPARAMS(channel_name, server.getHostname()));
+            ERR_NEEDMOREPARAMS(channel_name, server.get_hostname()));
         break;
       }
       target_name = params[2];
@@ -237,13 +237,13 @@ void Channel::unset_mode(char mode,
       if (!this->has_client(target)) {
         server.sendResponse(client->get_socket(),
                             ERR_USERNOTINCHANNEL(target_name, channel_name,
-                                                 server.getHostname()));
+                                                 server.get_hostname()));
         break;
       }
       if (!this->is_channel_operator(target_name)) {
         server.sendResponse(
             client->get_socket(),
-            ERR_CHANOPRIVSNEEDED(channel_name, server.getHostname()));
+            ERR_CHANOPRIVSNEEDED(channel_name, server.get_hostname()));
         break;
       }
       this->remove_channel_operator(target);

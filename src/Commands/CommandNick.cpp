@@ -24,26 +24,26 @@ void CommandNick::execute(int &clientSocket,
                           Server *server,
                           std::vector<std::string> *params) {
 
-  if (!client->get_Authentication()) {
+  if (!client->is_authenticated()) {
     server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->getHostname()));
+                         ERR_NOTREGISTERED(server->get_hostname()));
     return;
   }
   if (params->size() < 1) {
     server->sendResponse(clientSocket,
-                         ERR_NEEDMOREPARAMS("NICK", server->getHostname()));
+                         ERR_NEEDMOREPARAMS("NICK", server->get_hostname()));
     return;
   }
 
   std::string nick = params->at(0);
   if (!validate_nick(nick)) {
     server->sendResponse(clientSocket,
-                         ERR_ERRONEUSNICKNAME(server->getHostname(), nick));
+                         ERR_ERRONEUSNICKNAME(server->get_hostname(), nick));
     return;
   }
   if (server->getClientByNickname(nick)) {
     server->sendResponse(clientSocket,
-                         ERR_NICKNAMEINUSE(server->getHostname(), nick));
+                         ERR_NICKNAMEINUSE(server->get_hostname(), nick));
     return;
   }
   client->set_nickname(nick);

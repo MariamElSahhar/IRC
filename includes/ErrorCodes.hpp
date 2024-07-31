@@ -1,10 +1,12 @@
 #pragma once
 
+#define CHANNELMODES "itkol"
+
 // The server sends Replies 001 to 004 to a user upon successful registration.
 #define RPL_WELCOME(nick, host) (":" + host + " 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "\r\n")
 #define RPL_YOURHOST(host, nick) (":" + host + " 002 " + nick + " :Your host is " + host + ", running version 1.0.0" + "\r\n")
 #define RPL_CREATED(host, nick) (":" + host + " 003 " + nick + " :This server was created on 10/07/2024. \r\n")
-#define RPL_MYINFO(host, channelmodes, nick) (":" + host +  " 004 " + nick + " :Server " + host + " Version 1.0.0 - Channel modes: " + channelmodes + "\r\n")
+#define RPL_MYINFO(host, nick) (":" + host +  " 004 " + nick + " :Server " + host + " Version 1.0.0 - Channel modes: " + CHANNELMODES + "\r\n")
 
 #define ERR_PASSWDMISMATCH(host) (":" + host + " 464 " + host + " : Password incorrect \r\n")
 #define ERR_NEEDMOREPARAMS(command, host) (":" + host + " 461 " + command + " : Not enough parameters \r\n")

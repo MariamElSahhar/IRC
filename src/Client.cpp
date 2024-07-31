@@ -2,20 +2,29 @@
 #include "ErrorCodes.hpp"
 #include "Server.hpp"
 
-Client::Client(int fd, Server &server, std::string ip) {
-	_server = &server;
+Client::Client(int fd,  Server &server, std::string ip) {
+  	_server = &server;
   _socket = fd;
   _server_hostname = ip;
+  (void)fd;
+  (void)ip;
+
   _nickname = "";
   _username = "";
+  _hostname = "";
+  _servername = "";
   _realname = "";
+
   _operator = false;
 	_registered = false;
-  _authenticated = false;  // using in PASS Command (setting to false in the
-                           // beginnging and true after validation)
+  _authenticated = false;
 }
 
 Client::~Client() {}
+
+void Client::registerClient() {
+  _registered = true;
+}
 
 void Client::authenticate() {
   _authenticated = true;
@@ -34,7 +43,7 @@ bool Client::is_registered(void) const {
 	return _registered;
 }
 
-bool Client::get_Authentication() const {
+bool Client::is_authenticated() const {
   return (_authenticated);
 }
 
@@ -52,34 +61,6 @@ bool Client::isMessageReady() {
 
 std::string Client::get_EntireMessage() {
   return (fullMessage);
-}
-
-std::string Client::get_nickname(void) const {
-  return _nickname;
-}
-
-std::string Client::get_username(void) const {
-  return _username;
-}
-
-std::string Client::get_hostname(void) const {
-  return _server_hostname;
-}
-
-std::string Client::get_realname(void) const {
-  return _realname;
-}
-
-void Client::set_nickname(std::string nickname) {
-  _nickname = nickname;
-}
-
-void Client::set_username(std::string username) {
-  _username = username;
-}
-
-void Client::set_realname(std::string realname) {
-  _realname = realname;
 }
 
 void Client::set_operator(std::string oper_password) {
@@ -134,6 +115,46 @@ void Client::reply(std::string code, std::string msg) {
   std::string reply = hostname_str + code_str + nickname_str + msg + "\r\n";
   std::cout << "Reply: " << reply << std::endl;
   send(_socket, reply.c_str(), reply.length(), 0);
+}
+
+std::string Client::get_servername() const{
+  return (_servername);
+}
+
+std::string Client::get_nickname(void) const {
+  return _nickname;
+}
+
+std::string Client::get_username(void) const {
+  return _username;
+}
+
+std::string Client::get_hostname(void) const {
+  return _server_hostname;
+}
+
+std::string Client::get_realname(void) const {
+  return _realname;
+}
+
+void Client::set_nickname(std::string nickname) {
+  _nickname = nickname;
+}
+
+void Client::set_username(std::string username) {
+  _username = username;
+}
+
+void Client::set_realname(std::string realname) {
+  _realname = realname;
+}
+
+void Client::set_servername(std::string servername) {
+  _servername = servername;
+}
+
+void Client::set_hostname(std::string hostname) {
+  _hostname = hostname;
 }
 
 void Client::broadcast(Client *sender,

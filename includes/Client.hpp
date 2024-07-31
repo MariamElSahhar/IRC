@@ -23,20 +23,27 @@ class Client {
   std::string get_realname(void) const;
   std::string get_username(void) const;
   std::string get_hostname(void) const;
+  std::string get_servername(void) const;
   int get_socket(void) const;
-  bool get_Authentication(void) const;
   bool is_operator(void) const;
+  bool is_authenticated(void) const;
   bool is_registered(void) const;
 
   void set_nickname(std::string nickname);
   void set_realname(std::string realname);
   void set_username(std::string username);
+  void set_servername(std::string servername);
+  void set_hostname(std::string hostname);
   void set_operator(std::string oper_password);
   void unset_operator(void);
 
   std::deque<std::string> pendingWrite;
+
   void authenticate();
   void register_client(void);
+  void registerClient();
+
+  // User data
   void reply(std::string code, std::string msg);
   void broadcast(Client *sender,
                  std::string command,
@@ -55,6 +62,9 @@ class Client {
   std::string _realname;
   std::string fullMessage;
   std::string currentMessage;
+
+  std::string _hostname;
+  std::string _servername;
 
   void processMessage(const char *msg);
 };
