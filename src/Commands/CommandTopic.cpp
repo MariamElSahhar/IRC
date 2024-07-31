@@ -1,5 +1,4 @@
 #include "CommandTopic.hpp"
-#include <vector>
 
 CommandTopic::CommandTopic() {}
 CommandTopic::~CommandTopic() {}

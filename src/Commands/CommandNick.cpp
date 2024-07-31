@@ -1,10 +1,11 @@
 #include "CommandNick.hpp"
-#include <vector>
+#include "Server.hpp"
 
 CommandNick::CommandNick() {}
 CommandNick::~CommandNick() {}
 
 bool CommandNick::validate_nick(std::string nick) {
+  std::cout << nick << std::endl;
   if (nick.length() < 2 || nick.length() > 15 ||
       !isalpha(nick[0]) || nick.find("--") != std::string::npos ||
                nick.find("__") != std::string::npos) {
@@ -22,7 +23,8 @@ void CommandNick::execute(int &clientSocket,
                           Client *client,
                           Server *server,
                           std::vector<std::string> *params) {
-  if (!client->getAuthentication()) {
+
+  if (!client->get_Authentication()) {
     server->sendResponse(clientSocket,
                          ERR_NOTREGISTERED(server->getHostname()));
     return;
@@ -44,7 +46,7 @@ void CommandNick::execute(int &clientSocket,
                          ERR_NICKNAMEINUSE(server->getHostname(), nick));
     return;
   }
-  client->setNickname(nick);
+  client->set_nickname(nick);
 
   std::string response = "Nickname set to " + nick + "\r\n";
   server->sendResponse(clientSocket, response);

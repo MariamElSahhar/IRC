@@ -1,6 +1,4 @@
 en.subject.pdf
-compile_commands.json
 .cache/
-.clangd
-.clang-format
 .github/
+.clangd

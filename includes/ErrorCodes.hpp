@@ -37,7 +37,7 @@
 #define RPL_PART(prefix, channel, comment) (":" + prefix + " PART " + channel + " " + comment + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN " + channel + "\r\n")
 #define RPL_MODE(mode, nick, channel) (":" + nick + " MODE " + channel + " " + mode + " \r\n")
-#define ERR_NOSUCHCHANNEL(channel, host) (":" + host + " 403 " + channel + " :No such channel \r\n")
+#define ERR_NOSUCHCHANNEL(channel, host) (":" + host + " 403 " + channel + " :No such channel. Creating channel\r\n")
 #define ERR_USERNOTINCHANNEL(nick, channel, host) (":" + host + " 441 " + channel + " " + nick + " :They aren't on that channel \r\n")
 #define ERR_NOTONCHANNEL(channel, host) (":" + host + " 442 " + channel + " :You're not on that channel \r\n")
 #define ERR_USERONCHANNEL(user, channel, host) (":" + host + " 443 " + channel + " " + user + " is already on channel \r\n")
@@ -45,10 +45,11 @@
 #define ERR_CHANNELISFULL(channel) ("471 " + channel + " :Cannot join channel (+l) \r\n")
 #define ERR_INVITEONLYCHAN(channel) ("473 " + channel + " :Cannot join channel (+i) \r\n")
 #define ERR_BADCHANNELKEY(channel) ("475 " + channel + " :Cannot join channel (+k) \r\n")
+#define ERR_NOPRIVILEGES(channel) ("481" + channel + " :Permission Denied- You are not an IRC operator \r\n")
 #define ERR_CHANOPRIVSNEEDED(channel, host) (":" + host + " 482 " + channel + " :You're not channel operator \r\n")
 #define ERR_CHANOP(channel, host) (":" + host + " ERROR " + channel + " :You can't kick an operator \r\n")
 #define ERR_WRONGKEY(channel, host) (":" + host + " ERROR " + channel + " :Wrong Channel key \r\n")
-#define ERR_UNKNOWNMODE(mode, channel) ("472 " + mode + " :is unknown mode char to me for " + channel + "\r\n")
+#define ERR_UNKNOWNMODE(channel) ("472 : Unknown mode char for " + channel + "\r\n")
 #define RPL_QUIT(prefix, message) (":" + prefix + " QUIT " + message + "\r\n")
 
 

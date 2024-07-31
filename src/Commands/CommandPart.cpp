@@ -1,5 +1,4 @@
 #include "CommandPart.hpp"
-#include <vector>
 
 CommandPart::CommandPart() {}
 CommandPart::~CommandPart() {}

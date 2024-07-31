@@ -2,9 +2,9 @@
 
 IrcClients::IrcClients() {}
 
-void IrcClients::createClient(int clientSocket, std::string ipClient) {
+void IrcClients::createClient(int clientSocket, Server &server, std::string ipClient) {
   std::cout << "IrcClients::createClient" << std::endl;
-  Client *client = new Client(clientSocket, ipClient);
+  Client *client = new Client(clientSocket, server, ipClient);
   mapSocketToClientInstance[clientSocket] = client;
 }
 
@@ -37,11 +37,11 @@ IrcClients::~IrcClients() {
   }
 }
 
-Client * IrcClients::getClientByNickname(const std::string &nickname) {
+Client *IrcClients::getClientByNickname(const std::string &nickname) {
   std::map<int, Client *>::iterator it;
   for (it = mapSocketToClientInstance.begin();
        it != mapSocketToClientInstance.end(); ++it) {
-    if (it->second->getNickname() == nickname) {
+    if (it->second->get_nickname() == nickname) {
       return (it->second);
     }
   }

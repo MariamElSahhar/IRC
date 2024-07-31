@@ -6,7 +6,7 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 15:27:02 by pbalbino          #+#    #+#             */
-/*   Updated: 2024/07/11 15:35:22 by pbalbino         ###   ########.fr       */
+/*   Updated: 2024/07/21 15:11:19 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,7 @@ bool isValidPassword(const std::string &password) {
 
 int main(int argc, char **argv) {
   if (argc != 3) {
-    std::cerr << "Incorrect number of arguments. Please write: ircserv <port> "
-                 "<password>."
+    std::cerr << "Incorrect number of arguments. Please write: ./ircserv <port> <password>."
               << std::endl;
     return (EXIT_FAILURE);
   }
@@ -71,20 +70,23 @@ int main(int argc, char **argv) {
 
   if (checkPortNumber(port) == true && isValidPassword(password) == true) {
     int portNumber = atoi(port.c_str());
-    IrcClients *ircClients =
-        new IrcClients();  // creates an object of the Irc Clients, which is
-                           // responsible to manage all the connected clientes
-    CommandFactory *commandFactory =
-        new CommandFactory();  // creates an object of the Command Factory,
-                               // which is reponsible to create command objects
-                               // depending on the command type (PASS, MODE,
-                               // etc)
-    Server server(portNumber, password, ircClients,
-                  commandFactory);  // this is the most impostant class, which
-                                    // is reponsible for opening the socket and
-                                    // waiting for connections
-    server.start();  // here we will start the server and keep waiting and
-                     // processing conections, on an infinite loop
+    IrcClients *ircClients = new IrcClients();
+    // creates an object of the Irc Clients, which is
+    // responsible to manage all the connected clients
+
+    CommandFactory *commandFactory = new CommandFactory();
+    // creates an object of the Command Factory,
+    // which is reponsible to create command objects
+    // depending on the command type (PASS, MODE, etc)
+
+    Server server(portNumber, password, ircClients, commandFactory);
+    // this is the most impostant class, which
+    // is reponsible for opening the socket and
+    // waiting for connections
+
+    server.start();
+    // here we will start the server and keep waiting and
+    // processing conections, on an infinite loop
 
     delete commandFactory;
     delete ircClients;
