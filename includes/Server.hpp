@@ -1,26 +1,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <poll.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <algorithm>
-#include <csignal>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
-#include <map>
-#include <utility>
-#include <vector>
-#include "Channel.hpp"
-#include "CommandFactory.hpp"
+#include "utils.hpp"
 #include "IrcClients.hpp"
 
 #define MAX_CON 100
@@ -36,6 +17,8 @@
 #define CYAN "\e[36m"
 
 class CommandFactory;
+
+class Channel;
 
 class Server {
  public:

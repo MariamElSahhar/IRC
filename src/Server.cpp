@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Channel.hpp"
 #include "CommandFactory.hpp"
 #include "IrcClients.hpp"
 #include "IrcCommandParser.hpp"
@@ -22,10 +23,10 @@ Server::Server(int port,
                IrcClients *ircClients,
                CommandFactory *commandFactory)
     : portNb(port),
+      socketNb(-1),
       password(password),
       ipAddress(IP_BIND),
       hostName(HOSTNAME),
-      socketNb(-1),
       pollFdVector(),
       ircClients(ircClients),
       commandFactory(commandFactory) {

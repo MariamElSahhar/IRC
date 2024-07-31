@@ -1,4 +1,5 @@
 #include "CommandJoin.hpp"
+#include "Channel.hpp"
 #include "ErrorCodes.hpp"
 #include "Server.hpp"
 
@@ -31,7 +32,7 @@ void CommandJoin::execute(int &clientSocket,
       }
       server->sendResponse(
           clientSocket, ERR_NOSUCHCHANNEL(channel_name, server->getHostname()));
-      channel = new Channel(channel_name, server->getHostname());
+      channel = new Channel(channel_name, server->getHostname(), *server);
       server->add_channel(channel);
       channel->increase_user_quantity();
       channel->join(client);

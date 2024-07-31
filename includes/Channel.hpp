@@ -2,9 +2,13 @@
 #define CHANNELL_HPP
 
 #include "Client.hpp"
+#include "ErrorCodes.hpp"
+
+class Server;
 
 class Channel {
  private:
+  Server *_server;
   std::string _name;
   std::string _hostname;
   std::string _topic;
@@ -19,12 +23,12 @@ class Channel {
 
   bool _invite_only;
   bool _has_pass;
-  bool _topic_restriction;
   bool _has_user_limit;
+  bool _topic_restriction;
 
  public:
   // Constructors and Destructors
-  Channel(std::string name, std::string hostname);
+  Channel(std::string name, std::string hostname, Server &server);
   Channel(const Channel &src);
   ~Channel(void);
 
@@ -35,7 +39,6 @@ class Channel {
   void quit(Client *client);
   void topic(Client *client, std::vector<std::string> params);
   void names(Client *client);
-  void mode(Client *client, std::string message);
   void kick(Client *client, Client *target, std::string cause);
 
   void add_channel_operator(Client *client);
@@ -45,10 +48,12 @@ class Channel {
   void invite(Client *client);
   void leave(Client *client);
   void set_mode(char mode,
+                Server &server,
                 std::vector<std::string> params,
                 Client *client,
                 std::string channel_name);
   void unset_mode(char mode,
+                  Server &server,
                   std::vector<std::string> params,
                   Client *client,
                   std::string channel_name);

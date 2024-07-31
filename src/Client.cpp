@@ -22,6 +22,10 @@ bool Client::get_Authentication() const {
   return (_authenticated);
 }
 
+int Client::get_socket() const {
+  return (_socket);
+}
+
 bool Client::is_operator(void) const {
   return _operator;
 }

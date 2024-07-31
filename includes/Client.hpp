@@ -21,6 +21,7 @@ class Client {
   std::string get_realname(void) const;
   std::string get_username(void) const;
   std::string get_hostname(void) const;
+  int get_socket(void) const;
   bool get_Authentication(void) const;
   // bool get_Registeration(void) const;
   bool is_operator(void) const;
