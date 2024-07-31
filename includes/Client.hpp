@@ -9,9 +9,11 @@
 
 const std::string g_oper_password = "oper";
 
+class Server;
+
 class Client {
  public:
-  Client(int fd, std::string ip);
+  Client(int fd, Server &server, std::string ip);
   ~Client();
   void messageHandler(char msg[]);
   bool isMessageReady();
@@ -23,8 +25,8 @@ class Client {
   std::string get_hostname(void) const;
   int get_socket(void) const;
   bool get_Authentication(void) const;
-  // bool get_Registeration(void) const;
   bool is_operator(void) const;
+  bool is_registered(void) const;
 
   void set_nickname(std::string nickname);
   void set_realname(std::string realname);
@@ -34,6 +36,7 @@ class Client {
 
   std::deque<std::string> pendingWrite;
   void authenticate();
+  void register_client(void);
   void reply(std::string code, std::string msg);
   void broadcast(Client *sender,
                  std::string command,
@@ -41,9 +44,11 @@ class Client {
                  std::string message);
 
  private:
+  Server *_server;
   int _socket;
   bool _operator;
   bool _authenticated;
+  bool _registered;
   std::string _server_hostname;
   std::string _nickname;
   std::string _username;

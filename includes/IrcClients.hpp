@@ -4,11 +4,12 @@
 #include <map>
 #include "Client.hpp"
 
+class Server;
 class IrcClients {
  public:
   IrcClients();
   ~IrcClients();
-  void createClient(int clientSocket, std::string ipClient);
+  void createClient(int clientSocket, Server &server, std::string ipClient);
   Client *getClient(int clientSocket);
 	Client *getClientByNickname(const std::string &nickname);
   bool removeClient(int clientSocket);

@@ -1,8 +1,6 @@
 #include "CommandNick.hpp"
 #include "Server.hpp"
 
-#include <vector>
-
 CommandNick::CommandNick() {}
 CommandNick::~CommandNick() {}
 

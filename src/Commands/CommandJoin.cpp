@@ -1,6 +1,5 @@
 #include "CommandJoin.hpp"
 #include "Channel.hpp"
-#include "ErrorCodes.hpp"
 #include "Server.hpp"
 
 CommandJoin::CommandJoin() {}
@@ -10,8 +9,7 @@ void CommandJoin::execute(int &clientSocket,
                           Server *server,
                           std::vector<std::string> *params) {
   // Check if client is authenticated AND **registered** ->> to be implemented
-	client->authenticate(); // Temporary implementation until registration is implemented
-  if (client->get_Authentication() == true) {
+  if (client->get_Authentication() == true && client->is_registered() == true) {
     if (params->size() < 1) {
       server->sendResponse(clientSocket,
                            ERR_NEEDMOREPARAMS("JOIN", server->getHostname()));

@@ -192,7 +192,7 @@ void Server::acceptConnection() {
 
   // add new client to ClientArray
   std::string ipClient = inet_ntoa(clientAddr.sin_addr);
-  ircClients->createClient(clientSocket, ipClient);
+  ircClients->createClient(clientSocket, *this, ipClient);
 
   std::cout << GREEN "Client successfully connected on socket fd: " RESET
             << clientSocket << std::endl;

@@ -1,5 +1,4 @@
 #include "IrcCommandParser.hpp"
-#include "utils.hpp"
 
 void IrcCommandParser::tokenize(std::string buffer) {
   std::vector<std::string> split_buffer = split(buffer);

@@ -1,7 +1,9 @@
 #include "Client.hpp"
+#include "ErrorCodes.hpp"
 #include "Server.hpp"
 
-Client::Client(int fd, std::string ip) {
+Client::Client(int fd, Server &server, std::string ip) {
+	_server = &server;
   _socket = fd;
   _server_hostname = ip;
   _nickname = "";
@@ -16,6 +18,19 @@ Client::~Client() {}
 
 void Client::authenticate() {
   _authenticated = true;
+}
+
+void Client::register_client() {
+	if (get_nickname().empty())
+		_server->sendResponse(_socket, ERR_NONICKNAMEGIVEN(_server_hostname));
+	else if (!this->get_username().empty() && !this->get_realname().empty()) {
+		_server->sendResponse(_socket, RPL_WELCOME(_nickname, _server_hostname));
+		_registered = true;
+	}
+}
+
+bool Client::is_registered(void) const {
+	return _registered;
 }
 
 bool Client::get_Authentication() const {
