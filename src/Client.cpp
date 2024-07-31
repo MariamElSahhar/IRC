@@ -10,6 +10,7 @@ Client::Client(int fd, Server &server, std::string ip) {
   _username = "";
   _realname = "";
   _operator = false;
+	_registered = false;
   _authenticated = false;  // using in PASS Command (setting to false in the
                            // beginnging and true after validation)
 }
