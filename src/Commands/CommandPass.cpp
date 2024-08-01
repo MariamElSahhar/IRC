@@ -1,4 +1,5 @@
 #include "CommandPass.hpp"
+#include "Server.hpp"
 
 CommandPass::CommandPass() {}
 CommandPass::~CommandPass() {}

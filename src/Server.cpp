@@ -222,8 +222,8 @@ int Server::readMessage(int i) {
     }
     return (-1);
   }
-  std::cout << "Received: " << bytesRecv
-            << " bytes Raw msg:" << std::string(buffer) << std::endl;
+  std::cout << "\nReceived: " << bytesRecv
+            << " bytes Raw msg:" << std::string(buffer);
   Client *currentClient = ircClients->getClient(clientFd);
   if (currentClient != NULL) {
     currentClient->messageHandler(buffer);

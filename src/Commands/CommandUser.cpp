@@ -1,4 +1,5 @@
 #include "CommandUser.hpp"
+#include "Server.hpp"
 
 CommandUser::CommandUser() {}
 CommandUser::~CommandUser() {}

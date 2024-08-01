@@ -15,7 +15,7 @@ Client::Client(int fd,  Server &server, std::string ip) {
   _servername = "";
   _realname = "";
 
-  _operator = false;
+  _operator = true;
 	_registered = false;
   _authenticated = false;
 }
@@ -58,15 +58,6 @@ bool Client::isMessageReady() {
 
 std::string Client::get_EntireMessage() {
   return (fullMessage);
-}
-
-void Client::set_operator(std::string oper_password) {
-  if (oper_password == g_oper_password)
-    _operator = true;
-}
-
-void Client::unset_operator() {
-	_operator = false;
 }
 
 void Client::messageHandler(char msg[]) {
@@ -132,6 +123,15 @@ std::string Client::get_hostname(void) const {
 
 std::string Client::get_realname(void) const {
   return _realname;
+}
+
+void Client::set_operator(std::string oper_password) {
+  if (oper_password == g_oper_password)
+    _operator = true;
+}
+
+void Client::unset_operator() {
+	_operator = false;
 }
 
 void Client::set_nickname(std::string nickname) {
