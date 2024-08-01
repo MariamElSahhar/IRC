@@ -61,7 +61,6 @@ class Server {
   void sendResponse(int clientSocket, std::string msg);
   void cleanUp();
   Client *getClientByNickname(const std::string &nickname);
-  void registerClient(int &clientSocket, Client *client);
 
  private:
   int portNb;

@@ -22,21 +22,18 @@ Client::Client(int fd,  Server &server, std::string ip) {
 
 Client::~Client() {}
 
-void Client::registerClient() {
+void Client::register_client() {
+  _server->sendResponse(_socket,
+               RPL_WELCOME(get_nickname(), _server->get_hostname()));
+  _server->sendResponse(_socket,
+               RPL_YOURHOST(_server->get_hostname(), get_nickname()));
+  _server->sendResponse(_socket, RPL_CREATED(_server->get_hostname(), get_nickname()));
+  _server->sendResponse(_socket, RPL_MYINFO(_server->get_hostname(), get_nickname()));
   _registered = true;
 }
 
 void Client::authenticate() {
   _authenticated = true;
-}
-
-void Client::register_client() {
-	if (get_nickname().empty())
-		_server->sendResponse(_socket, ERR_NONICKNAMEGIVEN(_server_hostname));
-	else if (!this->get_username().empty() && !this->get_realname().empty()) {
-		_server->sendResponse(_socket, RPL_WELCOME(_nickname, _server_hostname));
-		_registered = true;
-	}
 }
 
 bool Client::is_registered(void) const {

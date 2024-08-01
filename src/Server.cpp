@@ -277,13 +277,3 @@ void Server::cleanUp() {
 Client *Server::getClientByNickname(const std::string &nickname) {
   return (ircClients->getClientByNickname(nickname));
 }
-
-void Server::registerClient(int &clientSocket, Client *client) {
-  sendResponse(clientSocket,
-               RPL_WELCOME(client->get_nickname(), get_hostname()));
-  sendResponse(clientSocket,
-               RPL_YOURHOST(get_hostname(), client->get_nickname()));
-  sendResponse(clientSocket, RPL_CREATED(get_hostname(), client->get_nickname()));
-  sendResponse(clientSocket, RPL_MYINFO(get_hostname(), client->get_nickname()));
-  client->registerClient();
-}

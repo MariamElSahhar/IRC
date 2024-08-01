@@ -41,7 +41,6 @@ class Client {
 
   void authenticate();
   void register_client(void);
-  void registerClient();
 
   // User data
   void reply(std::string code, std::string msg);
