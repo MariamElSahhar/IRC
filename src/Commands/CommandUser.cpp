@@ -84,5 +84,5 @@ void CommandUser::execute(int &clientSocket,
   client->set_realname(realname);
   client->set_hostname(hostname);
   client->set_servername(servername);
-  server->registerClient(clientSocket, client);
+  client->register_client();
 }
