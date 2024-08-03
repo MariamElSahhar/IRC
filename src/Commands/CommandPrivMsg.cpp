@@ -20,10 +20,17 @@ bool CommandPrivMsg::validate_command(int &clientSocket,
   if (params[0].length() < 2) {
     server->sendResponse(clientSocket,
                          ERR_NORECIPIENT("NICK", server->get_hostname()));
+    return (false);
   }
+//   if (params[1][0] != ':') {
+//     server->sendResponse(clientSocket,
+//                          ERR_NOTEXTTOSEND(server->get_hostname()));
+//     return (false);
+//   }
   if (params.size() < 3 && params[1].length() < 2) {
     server->sendResponse(clientSocket,
                          ERR_NOTEXTTOSEND(server->get_hostname()));
+    return (false);
   }
   return (true);
 }
@@ -70,13 +77,14 @@ void CommandPrivMsg::send_to_user(int &clientSocket,
                                   std::string &recipient_nick,
                                   std::string &message) {
   Client *recipient = server->get_client_by_nickname(recipient_nick);
-  if (!recipient) {
+  if (!recipient || !recipient->is_registered()) {
     server->sendResponse(
         clientSocket, ERR_NOSUCHNICK(recipient_nick, server->get_hostname()));
     return;
   }
-  server->sendResponse(recipient->get_socket(), PRIVMSG(client->get_nickname(),
-                                             recipient_nick, message));
+  server->sendResponse(
+      recipient->get_socket(),
+      PRIVMSG(client->get_nickname(), recipient_nick, message));
 }
 
 void CommandPrivMsg::execute(int &clientSocket,
