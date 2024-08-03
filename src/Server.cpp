@@ -264,11 +264,10 @@ Channel *Server::get_channel(std::string name) {
 void Server::cleanUp() {
   // close the fds
   if (!pollFdVector.empty()) {
-    for (unsigned int i = 0; i < pollFdVector.size(); i++) {
-      if (pollFdVector[i].fd > 0) {
-        close(pollFdVector[i].fd);
-        pollFdVector.erase(pollFdVector.begin() + i);
-      }
+    std::vector<pollfd>::iterator it;
+    for (it = pollFdVector.begin(); it != pollFdVector.end(); it++) {
+      if (it->fd > 0)
+        close(it->fd);
     }
     pollFdVector.clear();
   }
