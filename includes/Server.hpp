@@ -60,7 +60,7 @@ class Server {
 
   void sendResponse(int clientSocket, std::string msg);
   void cleanUp();
-  Client *getClientByNickname(const std::string &nickname);
+  Client *get_client_by_nickname(const std::string &nickname);
 
  private:
   int portNb;

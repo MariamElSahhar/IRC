@@ -41,7 +41,7 @@ void CommandNick::execute(int &clientSocket,
                          ERR_ERRONEUSNICKNAME(server->get_hostname(), nick));
     return;
   }
-  if (server->getClientByNickname(nick)) {
+  if (server->get_client_by_nickname(nick)) {
     server->sendResponse(clientSocket,
                          ERR_NICKNAMEINUSE(server->get_hostname(), nick));
     return;

@@ -20,11 +20,11 @@
 #define ERR_UNKNOWNCOMMAND(command, host) (":" + host + " 421 " + command + " :Unknown command \r\n")
 
 //private messages
+#define ERR_NOSUCHNICK(nick, host) (":" + host + " 401 " + nick + " :No such nick/channel" + "\r\n")
+#define ERR_CANNOTSENDTOCHAN(channel) ("404 " + channel + " :Cannot send to channel" + "\r\n")
 #define ERR_TOOMANYTARGETS(extraTarget, host) (":" + host + " 407 " + extraTarget + " :More than one recipient, aborted message" + "\r\n")
 #define ERR_NORECIPIENT(command, host) (":" + host + " 411 " + command + " :No recipient given" + "\r\n")
 #define ERR_NOTEXTTOSEND(host) (":" + host + " 412 :No text to send\r\n")
-#define ERR_NOSUCHNICK(nick, host) (":" + host + " 401 " + nick + " :No such nick/channel" + "\r\n")
-#define ERR_CANNOTSENDTOCHAN(channel) ("404 " + channel + " :Cannot send to channel" + "\r\n")
 #define PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + " :" + message + "\r\n")
 
 // channel
