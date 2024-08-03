@@ -1,50 +1,81 @@
 #include "CommandTopic.hpp"
+#include "Channel.hpp"
+#include "ErrorCodes.hpp"
 #include "Server.hpp"
 
 CommandTopic::CommandTopic() {}
 CommandTopic::~CommandTopic() {}
-void CommandTopic::execute(int &clientSocket,
-                           Client *client,
-                           Server *server,
-                           std::vector<std::string> *params) {}
+void CommandTopic::execute(int &clientSocket, Client *client, Server *server,
+                           std::vector<std::string> *params) {
 
-std::string topicName;
+  std::string topicName;
 
-// Input validation:
-// syntax: TOPIC <channel>             to view the channel topic name
-// syntax: TOPIC <channel> <:topic>    to change the topic name
-if (param->size() < 1 || param->size() > 2) {
+  // Input validation:
+  // syntax: TOPIC <channel>             to view the channel topic name
+  // syntax: TOPIC <channel> <:topic>    to change the topic name
+  if (params->size() < 1 || params->size() > 2) {
     server->sendResponse(clientSocket,
                          ERR_NEEDMOREPARAMS("TOPIC", server->get_hostname()));
     return;
   }
 
-// Check if the client is authenticated:
-if (!client->is_authenticated()) {
+  // Check if the client is authenticated:
+  if (!client->is_authenticated()) {
     server->sendResponse(clientSocket,
                          ERR_NOTREGISTERED(server->get_hostname()));
     return;
-}
+  }
 
-// Check if the channel exists
-if (server->get_channel(params[0]) == NULL) // Channel does not exist
-{
-    server->sendResponse(clientSocket,
-                         ERR_NOSUCHCHANNEL(param[0], server->get_hostname()));
+  // Check if the channel exists
+  if (server->get_channel(params->at(0)) == NULL) // Channel does not exist
+  {
+    server->sendResponse(
+        clientSocket, ERR_NOSUCHCHANNEL(params->at(0), server->get_hostname()));
     return;
-}
+  }
 
-if (param.size() == 1) // view channel name
-{
-    topicName = server->get_channel(params[0])->get_topic();
-    if (!topicName.empty())
+  if (params->size() == 1) // view channel name
+  {
+    Channel *channel = server->get_channel(params->at(0));
+    topicName = channel->get_topic();
+    if (!topicName.empty()) // will show the topic name
+    {
+      server->sendResponse(clientSocket,
+                           RPL_TOPIC(client->generatePrefix(),
+                                     client->get_nickname(), params->at(0),
+                                     server->get_hostname()));
+    }
+    else // will show ":No Topic Set"
+    {
+      server->sendResponse(clientSocket,
+                           RPL_NOTOPIC(client->generatePrefix(),
+                                           client->get_nickname(), params->at(0)));
+    }
+    return;
+  }
+
+  if (params->size() == 2) // change channel name
+  {
+    Channel *channel = server->get_channel(params->at(0));
+    if (channel->isUserOnChannel(client->get_nickname()) == false)
     {
         server->sendResponse(clientSocket,
-                        RPL_TOPIC(prefix, param[0], server->get_hostname()));
+                           ERR_NOTONCHANNEL(params->at(0), server->get_hostname()));
+    return;
+    }
+    // if change the topic name is restrited to operator:
+    if (channel->isTopicRestrictedToOperators() == true)
+    {
+      if (channel->is_channel_operator(client->get_nickname()) == false)
+      {
+          server->sendResponse(clientSocket,
+                           ERR_CHANOPRIVSNEEDED(params->at(0), server->get_hostname()));
+          return;
+      }
+    }
     }
 
-    return;
-}
+  }
 
 
 
