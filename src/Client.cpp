@@ -2,7 +2,7 @@
 #include "ErrorCodes.hpp"
 #include "Server.hpp"
 
-Client::Client(int fd,  Server &server, std::string ip) {
+Client::Client(int fd, Server &server, std::string ip) {
   _server = &server;
   _socket = fd;
   _server_hostname = ip;
@@ -16,7 +16,7 @@ Client::Client(int fd,  Server &server, std::string ip) {
   _realname = "";
 
   _operator = true;
-	_registered = false;
+  _registered = false;
   _authenticated = false;
 }
 
@@ -24,11 +24,13 @@ Client::~Client() {}
 
 void Client::register_client() {
   _server->sendResponse(_socket,
-               RPL_WELCOME(get_nickname(), _server->get_hostname()));
+                        RPL_WELCOME(get_nickname(), _server->get_hostname()));
   _server->sendResponse(_socket,
-               RPL_YOURHOST(_server->get_hostname(), get_nickname()));
-  _server->sendResponse(_socket, RPL_CREATED(_server->get_hostname(), get_nickname()));
-  _server->sendResponse(_socket, RPL_MYINFO(_server->get_hostname(), get_nickname()));
+                        RPL_YOURHOST(_server->get_hostname(), get_nickname()));
+  _server->sendResponse(_socket,
+                        RPL_CREATED(_server->get_hostname(), get_nickname()));
+  _server->sendResponse(_socket,
+                        RPL_MYINFO(_server->get_hostname(), get_nickname()));
   _registered = true;
 }
 
@@ -37,7 +39,7 @@ void Client::authenticate() {
 }
 
 bool Client::is_registered(void) const {
-	return _registered;
+  return _registered;
 }
 
 bool Client::is_authenticated() const {
@@ -105,7 +107,7 @@ void Client::reply(std::string code, std::string msg) {
   send(_socket, reply.c_str(), reply.length(), 0);
 }
 
-std::string Client::get_servername() const{
+std::string Client::get_servername() const {
   return (_servername);
 }
 
@@ -131,7 +133,7 @@ void Client::set_operator(std::string oper_password) {
 }
 
 void Client::unset_operator() {
-	_operator = false;
+  _operator = false;
 }
 
 void Client::set_nickname(std::string nickname) {
@@ -184,8 +186,7 @@ void Client::broadcast(Client *sender,
   return;
 }
 
-std::string Client::generatePrefix()
-{
-	std::string prefix = _nickname + "!" + _username + "@" + _server_hostname;
-	return (prefix);
+std::string Client::generatePrefix() {
+  std::string prefix = _nickname + "!" + _username + "@" + _server_hostname;
+  return (prefix);
 }

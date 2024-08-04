@@ -1,5 +1,6 @@
 #include "Channel.hpp"
 #include "Server.hpp"
+#include "sstream"
 
 Channel::Channel(std::string name, std::string hostname, Server &server)
     : _server(&server),
@@ -119,8 +120,8 @@ void Channel::leave(Client *client) {
 }
 
 // Set mode and unset mode are not finished yet
-// @MIkamal88: when you finish this could you please check this ft isTopicRestrictedToOperators (below)?
-// we will need it for topic. Thank you
+// @MIkamal88: when you finish this could you please check this ft
+// isTopicRestrictedToOperators (below)? we will need it for topic. Thank you
 void Channel::set_mode(char mode,
                        Server &server,
                        std::vector<std::string> params,
@@ -262,7 +263,7 @@ void Channel::unset_mode(char mode,
       message = "-l";
       break;
     default:
-			server.sendResponse(client->get_socket(), ERR_UNKNOWNMODE(channel_name));
+      server.sendResponse(client->get_socket(), ERR_UNKNOWNMODE(channel_name));
       break;
   }
 
@@ -301,10 +302,38 @@ std::string Channel::get_key(void) const {
   return this->_pass;
 }
 
-// Not Implemented
 std::string Channel::get_modes(void) {
-  std::string modes = "";
-  return modes;
+  std::string modes = "+";
+  std::string params = "";
+  if (this->_topic_restriction)
+    modes += "t";
+  if (this->_invite_only)
+    modes += "i";
+  if (this->_has_pass) {
+    modes += "k";
+    params += this->_pass;
+  }
+  if (this->_operator_clients.size() > 0) {
+    modes += "o";
+    if (!params.empty())
+      params += " ";
+    params += this->get_chanop_names();
+  }
+  if (this->has_user_limit()) {
+    modes += "l";
+    if (!params.empty())
+      params += " ";
+    std::stringstream ss;
+    ss << this->_user_limit;
+    params += ss.str();
+  }
+  // Concatenate modes and params
+  std::string response;
+  if (params.empty())
+    response = modes;
+  else
+    response = modes + " " + params;
+  return response;
 }
 
 int Channel::get_user_limit(void) const {
@@ -416,16 +445,17 @@ bool Channel::isUserOnChannel(std::string nickname) {
        it2 != this->_operator_clients.end(); it2++)
     if ((*it2)->get_nickname() == nickname)
       return true;
-    /* TO DO: add if _invited_clients is implemented
-  for (std::vector<Client *>::iterator it3 = this->_invited_clients.begin();
-       it3 != this->_invited_clients.end(); it3++)
-    if ((*it3)->get_nickname() == nickname)
-      return true; */
+  /* TO DO: add if _invited_clients is implemented
+for (std::vector<Client *>::iterator it3 = this->_invited_clients.begin();
+     it3 != this->_invited_clients.end(); it3++)
+  if ((*it3)->get_nickname() == nickname)
+    return true; */
   return false;
 }
 
-  bool Channel::isTopicRestrictedToOperators() {
-    //    TO DO : function need to be implemented
-    // verify if there is restrictions of the TOPIC command to channel operators (t mode)
-    return (false);
-  }
+bool Channel::isTopicRestrictedToOperators() {
+  //    TO DO : function need to be implemented
+  // verify if there is restrictions of the TOPIC command to channel operators
+  // (t mode)
+  return (false);
+}

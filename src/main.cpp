@@ -61,7 +61,8 @@ bool isValidPassword(const std::string &password) {
 
 int main(int argc, char **argv) {
   if (argc != 3) {
-    std::cerr << "Incorrect number of arguments. Please write: ./ircserv <port> <password>."
+    std::cerr << "Incorrect number of arguments. Please write: ./ircserv "
+                 "<port> <password>."
               << std::endl;
     return (EXIT_FAILURE);
   }

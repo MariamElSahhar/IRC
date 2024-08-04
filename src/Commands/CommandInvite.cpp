@@ -1,6 +1,6 @@
 #include "CommandInvite.hpp"
-#include "Server.hpp"
 #include "Channel.hpp"
+#include "Server.hpp"
 
 CommandInvite::CommandInvite() {}
 CommandInvite::~CommandInvite() {}
@@ -8,66 +8,71 @@ void CommandInvite::execute(int &clientSocket,
                             Client *client,
                             Server *server,
                             std::vector<std::string> *params) {
-
-  if (params->size() <= 1) // not enough parameters
+  if (params->size() <= 1)  // not enough parameters
   {
     server->sendResponse(clientSocket,
                          ERR_NEEDMOREPARAMS("INVITE", client->get_hostname()));
-    return ;
+    return;
   }
 
-  if (client->is_authenticated() == false) // client not authenticated
+  if (client->is_authenticated() == false)  // client not authenticated
   {
     server->sendResponse(clientSocket,
                          ERR_NOTREGISTERED(client->get_hostname()));
-    return ;
+    return;
   }
 
   // if the invited user is already on the channel
-  if (server->get_channel(params->at(1)) != NULL
-      && server->get_channel(params->at(1))->isUserOnChannel(params->at(0)) == true)
-  {
+  if (server->get_channel(params->at(1)) != NULL &&
+      server->get_channel(params->at(1))->isUserOnChannel(params->at(0)) ==
+          true) {
     server->sendResponse(clientSocket,
-                         ERR_USERONCHANNEL(params->at(0), params->at(1), client->get_hostname()));
-    return ;
+                         ERR_USERONCHANNEL(params->at(0), params->at(1),
+                                           client->get_hostname()));
+    return;
   }
 
-  if (server->getClientByNickname(params->at(0))  == NULL) // if nickname does not exist
+  if (server->getClientByNickname(params->at(0)) ==
+      NULL)  // if nickname does not exist
   {
     server->sendResponse(clientSocket,
                          ERR_NOSUCHNICK(params->at(0), client->get_hostname()));
-      return ;
+    return;
   }
 
   // if client is not on the channel he is inviting to
-  if (server->get_channel(params->at(1)) != NULL
-      && server->get_channel(params->at(1))->isUserOnChannel(params->at(0)) == false)
-  {
-    server->sendResponse(clientSocket,
-                         ERR_NOTONCHANNEL(params->at(1), client->get_hostname()));
-    return ;
+  if (server->get_channel(params->at(1)) != NULL &&
+      server->get_channel(params->at(1))->isUserOnChannel(params->at(0)) ==
+          false) {
+    server->sendResponse(
+        clientSocket, ERR_NOTONCHANNEL(params->at(1), client->get_hostname()));
+    return;
   }
 
-  //client is not an operator and this is required
-  if (server->get_channel(params->at(1)) != NULL
-      && server->get_channel(params->at(1))->get_invite_only() == true
-      && server->get_channel(params->at(1))->is_channel_operator(params->at(0)) == false)
-  {
-    server->sendResponse(clientSocket,
-                         ERR_CHANOPRIVSNEEDED(params->at(1), client->get_hostname()));
-    return ;
+  // client is not an operator and this is required
+  if (server->get_channel(params->at(1)) != NULL &&
+      server->get_channel(params->at(1))->get_invite_only() == true &&
+      server->get_channel(params->at(1))->is_channel_operator(params->at(0)) ==
+          false) {
+    server->sendResponse(
+        clientSocket,
+        ERR_CHANOPRIVSNEEDED(params->at(1), client->get_hostname()));
+    return;
   }
 
-  if (server->get_channel(params->at(1)) != NULL){
-    server->get_channel(params->at(1))->invite(server->getClientByNickname(params->at(0)));
+  if (server->get_channel(params->at(1)) != NULL) {
+    server->get_channel(params->at(1))
+        ->invite(server->getClientByNickname(params->at(0)));
 
     // message to client who is sending the invitation
-    server->sendResponse(clientSocket,
-                             RPL_INVITING(params->at(1), params->at(0), client->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        RPL_INVITING(params->at(1), params->at(0), client->get_hostname()));
 
     // message to the client who is receiving the invitation
-    server->sendResponse(server->getClientByNickname(params->at(0))->get_socket(),
-                         RPL_INVITING(params->at(1), params->at(0), client->get_hostname()));
+    server->sendResponse(
+        server->getClientByNickname(params->at(0))->get_socket(),
+        RPL_INVITING(params->at(1), params->at(0), client->get_hostname()));
   }
 }
 

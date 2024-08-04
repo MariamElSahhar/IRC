@@ -37,7 +37,7 @@
 #define RPL_PART(prefix, channel, comment) (":" + prefix + " PART " + channel + " " + comment + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN " + channel + "\r\n")
 #define RPL_MODE(mode, nick, channel) (":" + nick + " MODE " + channel + " " + mode + " \r\n")
-#define ERR_NOSUCHCHANNEL(channel, host) (":" + host + " 403 " + channel + " :No such channel.")
+#define ERR_NOSUCHCHANNEL(channel, host) (":" + host + " 403 " + channel + " :No such channel, ")
 #define ERR_USERNOTINCHANNEL(nick, channel, host) (":" + host + " 441 " + channel + " " + nick + " :They aren't on that channel \r\n")
 #define ERR_NOTONCHANNEL(channel, host) (":" + host + " 442 " + channel + " :You're not on that channel \r\n")
 #define ERR_USERONCHANNEL(user, channel, host) (":" + host + " 443 " + channel + " " + user + " is already on channel \r\n")

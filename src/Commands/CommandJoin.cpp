@@ -18,7 +18,8 @@ void CommandJoin::execute(int &clientSocket,
     std::string channel_name = (*params)[0];
     if (channel_name[0] != '#') {
       server->sendResponse(clientSocket,
-                           ERR_NOSUCHCHANNEL("JOIN", server->get_hostname()) + " Incorrect format\r\n");
+                           ERR_NOSUCHCHANNEL("JOIN", server->get_hostname()) +
+                               " Incorrect format\r\n");
       return;
     }
     Channel *channel = server->get_channel(channel_name);

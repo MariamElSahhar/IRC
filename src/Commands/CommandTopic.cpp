@@ -5,13 +5,12 @@
 
 CommandTopic::CommandTopic() {}
 CommandTopic::~CommandTopic() {}
-void CommandTopic::execute(int &clientSocket, Client *client, Server *server,
+void CommandTopic::execute(int &clientSocket,
+                           Client *client,
+                           Server *server,
                            std::vector<std::string> *params) {
-
   std::string topicName;
   std::vector<Client *> channelClients;
-
-
 
   // Input validation:
   // syntax: TOPIC <channel>             to view the channel topic name
@@ -30,68 +29,63 @@ void CommandTopic::execute(int &clientSocket, Client *client, Server *server,
   }
 
   // Check if the channel exists
-  if (server->get_channel(params->at(0)) == NULL) // Channel does not exist
+  if (server->get_channel(params->at(0)) == NULL)  // Channel does not exist
   {
     server->sendResponse(
         clientSocket, ERR_NOSUCHCHANNEL(params->at(0), server->get_hostname()));
     return;
   }
 
-  if (params->size() == 1) // view channel name
+  if (params->size() == 1)  // view channel name
   {
     Channel *channel = server->get_channel(params->at(0));
     topicName = channel->get_topic();
-    if (!topicName.empty()) // will show the topic name
+    if (!topicName.empty())  // will show the topic name
     {
-      server->sendResponse(clientSocket,
-                           RPL_TOPIC(client->generatePrefix(),
-                                     client->get_nickname(), params->at(0),
-                                     server->get_hostname()));
-    }
-    else // will show ":No Topic Set"
+      server->sendResponse(
+          clientSocket,
+          RPL_TOPIC(client->generatePrefix(), client->get_nickname(),
+                    params->at(0), server->get_hostname()));
+    } else  // will show ":No Topic Set"
     {
       server->sendResponse(clientSocket,
                            RPL_NOTOPIC(client->generatePrefix(),
-                                           client->get_nickname(), params->at(0)));
+                                       client->get_nickname(), params->at(0)));
     }
     return;
   }
   Channel *channel = server->get_channel(params->at(0));
-  if (params->size() == 2) // change channel name
+  if (params->size() == 2)  // change channel name
   {
-    if (channel->isUserOnChannel(client->get_nickname()) == false)
-    {
-        server->sendResponse(clientSocket,
-                           ERR_NOTONCHANNEL(params->at(0), server->get_hostname()));
-    return;
+    if (channel->isUserOnChannel(client->get_nickname()) == false) {
+      server->sendResponse(
+          clientSocket,
+          ERR_NOTONCHANNEL(params->at(0), server->get_hostname()));
+      return;
     }
     // if change the topic name is restricted to operator:
-    if (channel->isTopicRestrictedToOperators() == true)
-    {
-      if (channel->is_channel_operator(client->get_nickname()) == false)
-      {
-          server->sendResponse(clientSocket,
-                           ERR_CHANOPRIVSNEEDED(params->at(0), server->get_hostname()));
-          return;
+    if (channel->isTopicRestrictedToOperators() == true) {
+      if (channel->is_channel_operator(client->get_nickname()) == false) {
+        server->sendResponse(
+            clientSocket,
+            ERR_CHANOPRIVSNEEDED(params->at(0), server->get_hostname()));
+        return;
       }
     }
-    if (params->at(1).length() > 0 && params->at(1).length() < MAX_TOPIC_LEN)
-    {
+    if (params->at(1).length() > 0 && params->at(1).length() < MAX_TOPIC_LEN) {
       channel->set_topic(params->at(1));
-    }
-    else
+    } else
       channel->set_topic("");
-    }
-
-    channelClients = channel->get_clients();
-    for (int i = 0; i < channelClients.size(); i++)
-    {
-      server->sendResponse(channelClients[i]->get_socket(),
-        RPL_TOPIC(client->generatePrefix(),
-                                     client->get_nickname(), params->at(1),
-                                     server->get_hostname()));
-    }
   }
+
+  channelClients = channel->get_clients();
+  for (int i = 0; i < channelClients.size(); i++) {
+    server->sendResponse(
+        channelClients[i]->get_socket(),
+        RPL_TOPIC(client->generatePrefix(), client->get_nickname(),
+                  params->at(1), server->get_hostname()));
+  }
+}
 
 /*
 Command: TOPIC
