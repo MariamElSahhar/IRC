@@ -23,9 +23,13 @@
 #include <vector>
 
 #define MAX_CON 100
+#define MAX_TOPIC_LEN 307
+#define MAX_MESSAGE_SIZE 307
 #define MAX_BUF 512
 #define HOSTNAME "127.0.0.1"
 #define IP_BIND "127.0.0.1"
+
+// limits: https://www.geekshed.net/tag/limits/
 
 // Color Macros
 #define RESET "\e[m"

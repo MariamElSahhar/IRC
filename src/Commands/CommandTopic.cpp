@@ -9,6 +9,9 @@ void CommandTopic::execute(int &clientSocket, Client *client, Server *server,
                            std::vector<std::string> *params) {
 
   std::string topicName;
+  std::vector<Client *> channelClients;
+
+
 
   // Input validation:
   // syntax: TOPIC <channel>             to view the channel topic name
@@ -53,10 +56,9 @@ void CommandTopic::execute(int &clientSocket, Client *client, Server *server,
     }
     return;
   }
-
+  Channel *channel = server->get_channel(params->at(0));
   if (params->size() == 2) // change channel name
   {
-    Channel *channel = server->get_channel(params->at(0));
     if (channel->isUserOnChannel(client->get_nickname()) == false)
     {
         server->sendResponse(clientSocket,
@@ -73,11 +75,23 @@ void CommandTopic::execute(int &clientSocket, Client *client, Server *server,
           return;
       }
     }
+    if (params->at(1).length() > 0 && params->at(1).length() < MAX_TOPIC_LEN)
+    {
+      channel->set_topic(params->at(1));
+    }
+    else
+      channel->set_topic("");
     }
 
+    channelClients = channel->get_clients();
+    for (int i = 0; i < channelClients.size(); i++)
+    {
+      server->sendResponse(channelClients[i]->get_socket(),
+        RPL_TOPIC(client->generatePrefix(),
+                                     client->get_nickname(), params->at(1),
+                                     server->get_hostname()));
+    }
   }
-
-
 
 /*
 Command: TOPIC
@@ -90,4 +104,6 @@ Command: TOPIC
    requesting it.
    IMPORTANT: If the <topic> parameter is an empty string, the
    topic for that channel will be removed.
+
+   After changing the TOPIC name all user get a notification msg.
 */
