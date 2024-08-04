@@ -119,6 +119,8 @@ void Channel::leave(Client *client) {
 }
 
 // Set mode and unset mode are not finished yet
+// @MIkamal88: when you finish this could you please check this ft isTopicRestrictedToOperators (below)?
+// we will need it for topic. Thank you
 void Channel::set_mode(char mode,
                        Server &server,
                        std::vector<std::string> params,
@@ -404,3 +406,26 @@ void Channel::set_topic(const std::string topic) {
 void Channel::increase_user_quantity(void) {
   this->_users++;
 }
+
+bool Channel::isUserOnChannel(std::string nickname) {
+  for (std::vector<Client *>::iterator it = this->_clients.begin();
+       it != this->_clients.end(); it++)
+    if ((*it)->get_nickname() == nickname)
+      return true;
+  for (std::vector<Client *>::iterator it2 = this->_operator_clients.begin();
+       it2 != this->_operator_clients.end(); it2++)
+    if ((*it2)->get_nickname() == nickname)
+      return true;
+    /* TO DO: add if _invited_clients is implemented
+  for (std::vector<Client *>::iterator it3 = this->_invited_clients.begin();
+       it3 != this->_invited_clients.end(); it3++)
+    if ((*it3)->get_nickname() == nickname)
+      return true; */
+  return false;
+}
+
+  bool Channel::isTopicRestrictedToOperators() {
+    //    TO DO : function need to be implemented
+    // verify if there is restrictions of the TOPIC command to channel operators (t mode)
+    return (false);
+  }

@@ -12,6 +12,25 @@ const std::string g_oper_password = "oper";
 class Server;
 
 class Client {
+ private:
+  Server *_server;
+  int _socket;
+  bool _operator;
+  bool _authenticated;
+  bool _registered;
+  std::string _server_hostname;
+  std::string _nickname;
+  std::string _username;
+  std::string _realname;
+  std::string fullMessage;
+  std::string currentMessage;
+
+  std::string _hostname;
+  std::string _servername;
+
+  void processMessage(const char *msg);
+
+
  public:
   Client(int fd, Server &server, std::string ip);
   ~Client();
@@ -41,6 +60,7 @@ class Client {
 
   void authenticate();
   void register_client(void);
+  std::string generatePrefix();
 
   // User data
   void reply(std::string code, std::string msg);
@@ -49,23 +69,6 @@ class Client {
                  std::string target,
                  std::string message);
 
- private:
-  Server *_server;
-  int _socket;
-  bool _operator;
-  bool _authenticated;
-  bool _registered;
-  std::string _server_hostname;
-  std::string _nickname;
-  std::string _username;
-  std::string _realname;
-  std::string fullMessage;
-  std::string currentMessage;
-
-  std::string _hostname;
-  std::string _servername;
-
-  void processMessage(const char *msg);
 };
 
 #endif

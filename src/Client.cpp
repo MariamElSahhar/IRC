@@ -3,7 +3,7 @@
 #include "Server.hpp"
 
 Client::Client(int fd,  Server &server, std::string ip) {
-  	_server = &server;
+  _server = &server;
   _socket = fd;
   _server_hostname = ip;
   (void)fd;
@@ -182,4 +182,10 @@ void Client::broadcast(Client *sender,
 
   send(_socket, reply.c_str(), reply.length(), 0);
   return;
+}
+
+std::string Client::generatePrefix()
+{
+	std::string prefix = _nickname + "!" + _username + "@" + _server_hostname;
+	return (prefix);
 }
