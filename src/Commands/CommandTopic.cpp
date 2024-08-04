@@ -65,7 +65,7 @@ void CommandTopic::execute(int &clientSocket, Client *client, Server *server,
                            ERR_NOTONCHANNEL(params->at(0), server->get_hostname()));
     return;
     }
-    // if change the topic name is restrited to operator:
+    // if change the topic name is restricted to operator:
     if (channel->isTopicRestrictedToOperators() == true)
     {
       if (channel->is_channel_operator(client->get_nickname()) == false)
