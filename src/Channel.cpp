@@ -454,8 +454,7 @@ for (std::vector<Client *>::iterator it3 = this->_invited_clients.begin();
 }
 
 bool Channel::isTopicRestrictedToOperators() {
-  //    TO DO : function need to be implemented
-  // verify if there is restrictions of the TOPIC command to channel operators
-  // (t mode)
+  if (this->get_modes().find('t') != std::string::npos)
+    return (true);
   return (false);
 }
