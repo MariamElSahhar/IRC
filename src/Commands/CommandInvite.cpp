@@ -32,7 +32,7 @@ void CommandInvite::execute(int &clientSocket,
     return;
   }
 
-  if (server->getClientByNickname(params->at(0)) ==
+  if (server->get_client_by_nickname(params->at(0)) ==
       NULL)  // if nickname does not exist
   {
     server->sendResponse(clientSocket,
@@ -62,7 +62,7 @@ void CommandInvite::execute(int &clientSocket,
 
   if (server->get_channel(params->at(1)) != NULL) {
     server->get_channel(params->at(1))
-        ->invite(server->getClientByNickname(params->at(0)));
+        ->invite(server->get_client_by_nickname(params->at(0)));
 
     // message to client who is sending the invitation
     server->sendResponse(
@@ -71,7 +71,7 @@ void CommandInvite::execute(int &clientSocket,
 
     // message to the client who is receiving the invitation
     server->sendResponse(
-        server->getClientByNickname(params->at(0))->get_socket(),
+        server->get_client_by_nickname(params->at(0))->get_socket(),
         RPL_INVITING(params->at(1), params->at(0), client->get_hostname()));
   }
 }
