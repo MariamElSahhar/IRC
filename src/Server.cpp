@@ -276,6 +276,6 @@ void Server::cleanUp() {
   }
 }
 
-Client *Server::getClientByNickname(const std::string &nickname) {
+Client *Server::get_client_by_nickname(const std::string &nickname) {
   return (ircClients->getClientByNickname(nickname));
 }
