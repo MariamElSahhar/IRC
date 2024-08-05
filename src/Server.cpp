@@ -96,12 +96,13 @@ void Server::createSocket(int fd) {
   if (bind(fd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     throw std::runtime_error("Error while binding socket");
 
-	// Listen for Connections: The socket is set to listen for incoming
-	// connections using the listen() function, with a backlog of MAXCOUNT pending
-	// connections. If our program was blocking, this function would block/suspend the
-	// thread. In our case we are using non blocking sockets this will not block.
-	// This means that the treatment of the connections will be made by poll.
-	if (listen(fd, MAX_CON) < 0)
+  // Listen for Connections: The socket is set to listen for incoming
+  // connections using the listen() function, with a backlog of MAXCOUNT pending
+  // connections. If our program was blocking, this function would block/suspend
+  // the thread. In our case we are using non blocking sockets this will not
+  // block. This means that the treatment of the connections will be made by
+  // poll.
+  if (listen(fd, MAX_CON) < 0)
     throw std::runtime_error("Error listening on socket.");
   socketNb = fd;
 }
@@ -144,10 +145,12 @@ void Server::waitConnections() {
         readStatus = 0;
         continue;
       }
-		// verify if write/send a message is possible. POLLOUT:  Writing is now possible, though a
-		// write larger than the available space in a socket or pipe will still block (unless O_NONBLOCK is set).
-		// Each client its own "pendingWrite", since we are dealing with a non blocking scenario
-		// "front" takes the oldest message of the client and after writing it, pop_front remove it from the "queue"
+      // verify if write/send a message is possible. POLLOUT:  Writing is now
+      // possible, though a write larger than the available space in a socket or
+      // pipe will still block (unless O_NONBLOCK is set). Each client its own
+      // "pendingWrite", since we are dealing with a non blocking scenario
+      // "front" takes the oldest message of the client and after writing it,
+      // pop_front remove it from the "queue"
       if (pollFdVector[i].revents & POLLOUT) {
         Client *client = ircClients->getClient(pollFdVector[i].fd);
         if (client != NULL && !client->pendingWrite.empty()) {
@@ -207,7 +210,7 @@ int Server::readMessage(int i) {
       std::cerr << YELLOW "Client disconnected from socket fd: " RESET
                 << clientFd << std::endl;
     else
-      std::cerr << "Connection Error!" << std::endl;
+      std::cerr << YELLOW "Connection Error!" RESET << std::endl;
 
     //  deleting client that disconnected
     if (!ircClients->removeClient(clientFd)) {
@@ -222,8 +225,8 @@ int Server::readMessage(int i) {
     }
     return (-1);
   }
-  std::cout << "Received: " << bytesRecv
-            << " bytes Raw msg:" << std::string(buffer) << std::endl;
+  std::cout << "\nReceived: " << bytesRecv
+            << " bytes Raw msg:" << std::string(buffer);
   Client *currentClient = ircClients->getClient(clientFd);
   if (currentClient != NULL) {
     currentClient->messageHandler(buffer);
@@ -264,11 +267,10 @@ Channel *Server::get_channel(std::string name) {
 void Server::cleanUp() {
   // close the fds
   if (!pollFdVector.empty()) {
-    for (unsigned int i = 0; i < pollFdVector.size(); i++) {
-      if (pollFdVector[i].fd > 0) {
-        close(pollFdVector[i].fd);
-        pollFdVector.erase(pollFdVector.begin() + i);
-      }
+    std::vector<pollfd>::iterator it;
+    for (it = pollFdVector.begin(); it != pollFdVector.end(); it++) {
+      if (it->fd > 0)
+        close(it->fd);
     }
     pollFdVector.clear();
   }

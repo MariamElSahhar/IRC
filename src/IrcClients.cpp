@@ -2,8 +2,10 @@
 
 IrcClients::IrcClients() {}
 
-void IrcClients::createClient(int clientSocket, Server &server, std::string ipClient) {
-  // std::cout << "IrcClients::createClient" << std::endl;
+void IrcClients::createClient(int clientSocket,
+                              Server &server,
+                              std::string ipClient) {
+  std::cout << "IrcClients::createClient" << std::endl;
   Client *client = new Client(clientSocket, server, ipClient);
   mapSocketToClientInstance[clientSocket] = client;
 }

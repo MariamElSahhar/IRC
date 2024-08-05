@@ -2,7 +2,6 @@
 #define COMMANDUSER_HPP
 
 #include "ICommand.hpp"
-#include "Server.hpp"
 
 class CommandUser : public ICommand {
  public:

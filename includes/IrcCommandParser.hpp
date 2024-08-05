@@ -2,6 +2,7 @@
 #define IRCCOMMANDPARSER_HPP
 
 #include "CommandFactory.hpp"
+#include "utils.hpp"
 
 class IrcCommandParser {
  private:

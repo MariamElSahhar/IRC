@@ -82,6 +82,8 @@ class Channel {
   bool has_key(void) const;
   bool has_user_limit(void) const;
   bool has_client(Client *client);
+  bool isUserOnChannel(std::string nickname);
+  bool isTopicRestrictedToOperators();
 
   // Setters
   void set_topic(const std::string topic);

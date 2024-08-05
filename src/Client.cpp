@@ -2,8 +2,8 @@
 #include "ErrorCodes.hpp"
 #include "Server.hpp"
 
-Client::Client(int fd,  Server &server, std::string ip) {
-  	_server = &server;
+Client::Client(int fd, Server &server, std::string ip) {
+  _server = &server;
   _socket = fd;
   _server_hostname = ip;
   (void)fd;
@@ -15,8 +15,8 @@ Client::Client(int fd,  Server &server, std::string ip) {
   _servername = "";
   _realname = "";
 
-  _operator = false;
-	_registered = false;
+  _operator = true;
+  _registered = false;
   _authenticated = false;
 }
 
@@ -24,11 +24,13 @@ Client::~Client() {}
 
 void Client::register_client() {
   _server->sendResponse(_socket,
-               RPL_WELCOME(get_nickname(), _server->get_hostname()));
+                        RPL_WELCOME(get_nickname(), _server->get_hostname()));
   _server->sendResponse(_socket,
-               RPL_YOURHOST(_server->get_hostname(), get_nickname()));
-  _server->sendResponse(_socket, RPL_CREATED(_server->get_hostname(), get_nickname()));
-  _server->sendResponse(_socket, RPL_MYINFO(_server->get_hostname(), get_nickname()));
+                        RPL_YOURHOST(_server->get_hostname(), get_nickname()));
+  _server->sendResponse(_socket,
+                        RPL_CREATED(_server->get_hostname(), get_nickname()));
+  _server->sendResponse(_socket,
+                        RPL_MYINFO(_server->get_hostname(), get_nickname()));
   _registered = true;
 }
 
@@ -37,7 +39,7 @@ void Client::authenticate() {
 }
 
 bool Client::is_registered(void) const {
-	return _registered;
+  return _registered;
 }
 
 bool Client::is_authenticated() const {
@@ -58,15 +60,6 @@ bool Client::isMessageReady() {
 
 std::string Client::get_EntireMessage() {
   return (fullMessage);
-}
-
-void Client::set_operator(std::string oper_password) {
-  if (oper_password == g_oper_password)
-    _operator = true;
-}
-
-void Client::unset_operator() {
-	_operator = false;
 }
 
 void Client::messageHandler(char msg[]) {
@@ -114,7 +107,7 @@ void Client::reply(std::string code, std::string msg) {
   send(_socket, reply.c_str(), reply.length(), 0);
 }
 
-std::string Client::get_servername() const{
+std::string Client::get_servername() const {
   return (_servername);
 }
 
@@ -132,6 +125,15 @@ std::string Client::get_hostname(void) const {
 
 std::string Client::get_realname(void) const {
   return _realname;
+}
+
+void Client::set_operator(std::string oper_password) {
+  if (oper_password == g_oper_password)
+    _operator = true;
+}
+
+void Client::unset_operator() {
+  _operator = false;
 }
 
 void Client::set_nickname(std::string nickname) {
@@ -182,4 +184,9 @@ void Client::broadcast(Client *sender,
 
   send(_socket, reply.c_str(), reply.length(), 0);
   return;
+}
+
+std::string Client::generatePrefix() {
+  std::string prefix = _nickname + "!" + _username + "@" + _server_hostname;
+  return (prefix);
 }

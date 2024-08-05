@@ -18,7 +18,8 @@ void CommandJoin::execute(int &clientSocket,
     std::string channel_name = (*params)[0];
     if (channel_name[0] != '#') {
       server->sendResponse(clientSocket,
-                           ERR_NOSUCHCHANNEL("JOIN", server->get_hostname()));
+                           ERR_NOSUCHCHANNEL("JOIN", server->get_hostname()) +
+                               " Incorrect format\r\n");
       return;
     }
     Channel *channel = server->get_channel(channel_name);
@@ -29,7 +30,9 @@ void CommandJoin::execute(int &clientSocket,
         return;
       }
       server->sendResponse(
-          clientSocket, ERR_NOSUCHCHANNEL(channel_name, server->get_hostname()));
+          clientSocket,
+          ERR_NOSUCHCHANNEL(channel_name, server->get_hostname()) +
+              " Creating channel\r\n");
       channel = new Channel(channel_name, server->get_hostname(), *server);
       server->add_channel(channel);
       channel->increase_user_quantity();
