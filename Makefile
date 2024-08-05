@@ -12,7 +12,7 @@
 
 NAME = ircserv
 CXX = c++ -g
-CXXFLAGS = -std=c++98 -Wall -Wextra #-Werror
+CXXFLAGS = -std=c++98 -Wall -Wextra -Werror
 
 INC_PATH = ./includes/
 CFI = -I$(INC_PATH) -I$(INC_PATH)Commands/

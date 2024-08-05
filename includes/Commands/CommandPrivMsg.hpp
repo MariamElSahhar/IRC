@@ -1,9 +1,7 @@
 #ifndef COMMANDPRIVMSG_HPP
 #define COMMANDPRIVMSG_HPP
 
-#include "Channel.hpp"
 #include "ICommand.hpp"
-#include "Server.hpp"
 
 class CommandPrivMsg : public ICommand {
  public:
@@ -29,7 +27,7 @@ class CommandPrivMsg : public ICommand {
                     Server *server,
                     std::string &recipeint,
                     std::string &message);
-  std::string &parse_message(std::vector<std::string> &params);
+  std::string parse_message(std::vector<std::string> &params);
 };
 
 #endif

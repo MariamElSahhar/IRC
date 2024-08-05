@@ -58,12 +58,12 @@ class Server {
   std::string get_hostname();
   int readMessage(int indexFd);
 
+  Client *get_client_by_nickname(const std::string &nickname);
   Channel *get_channel(std::string name);
   void add_channel(Channel *channel);
 
   void sendResponse(int clientSocket, std::string msg);
   void cleanUp();
-  Client *get_client_by_nickname(const std::string &nickname);
 
  private:
   int portNb;

@@ -61,5 +61,4 @@ void CommandMode::execute(int &clientSocket,
     server->sendResponse(clientSocket,
                          ERR_NOTREGISTERED(server->get_hostname()));
   }
-  return;
 }

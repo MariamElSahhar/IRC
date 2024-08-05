@@ -79,7 +79,7 @@ void CommandTopic::execute(int &clientSocket,
   }
 
   channelClients = channel->get_clients();
-  for (int i = 0; i < channelClients.size(); i++) {
+  for (size_t i = 0; i < channelClients.size(); i++) {
     server->sendResponse(
         channelClients[i]->get_socket(),
         RPL_TOPIC(client->generatePrefix(), client->get_nickname(),

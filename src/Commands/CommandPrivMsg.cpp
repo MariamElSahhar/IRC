@@ -1,4 +1,6 @@
 #include "CommandPrivMsg.hpp"
+#include "Server.hpp"
+#include "Channel.hpp"
 
 CommandPrivMsg::CommandPrivMsg() {}
 CommandPrivMsg::~CommandPrivMsg() {}
@@ -35,7 +37,7 @@ bool CommandPrivMsg::validate_command(int &clientSocket,
   return (true);
 }
 
-std::string &CommandPrivMsg::parse_message(std::vector<std::string> &params) {
+std::string CommandPrivMsg::parse_message(std::vector<std::string> &params) {
   std::string message;
   for (size_t i = 1; i < params.size(); ++i) {
     if (i > 1) {

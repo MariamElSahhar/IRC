@@ -46,6 +46,12 @@ void Channel::join(Client *client) {
   this->broadcast(client, "JOIN", this->get_name(), "");
 }
 
+void Channel::part(Client *client, std::string cause) {
+	this->remove_channel_operator(client);
+	this->broadcast(client, "PART", this->get_name(), cause);
+	this->leave(client);
+}
+
 void Channel::quit(Client *client) {
   this->remove_channel_operator(client);
   this->broadcast(client, "QUIT", this->get_name(), "");

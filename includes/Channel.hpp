@@ -36,6 +36,7 @@ class Channel {
 
   // Member Functions
   void join(Client *client);
+	void part(Client *client, std::string cause);
   void quit(Client *client);
   void topic(Client *client, std::vector<std::string> params);
   void names(Client *client);
