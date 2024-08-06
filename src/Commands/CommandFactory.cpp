@@ -42,11 +42,11 @@ ICommand *CommandFactory::createCommand(CommandType cmdType) {
       break;
     case PING:
       command = new CommandPing();
-    default:
     case QUIT:
       command = new CommandQuit();
       break;
-
+    default:
+      break;
   }
   return command;
 }
