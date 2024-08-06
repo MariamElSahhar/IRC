@@ -299,6 +299,23 @@ void Server::cleanUp() {
   }
 }
 
+void Server::delete_client_by_nickname(const std::string &nickname) {
+  Client *client = ircClients->getClientByNickname(nickname);
+
+  if (client != NULL)
+  {
+    std::vector<pollfd>::iterator it2;
+    for (it2 = pollFdVector.begin(); it2 != pollFdVector.end(); it2++) {
+      if (it2->fd == client->get_socket()) {
+        close(it2->fd);
+        pollFdVector.erase(it2);
+        ircClients->removeClient(it2->fd);
+        break;
+      }
+    }
+  }
+}
+
 Client *Server::get_client_by_nickname(const std::string &nickname) {
   return (ircClients->getClientByNickname(nickname));
 }

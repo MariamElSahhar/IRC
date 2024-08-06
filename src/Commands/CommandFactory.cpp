@@ -40,8 +40,13 @@ ICommand *CommandFactory::createCommand(CommandType cmdType) {
     case CAP:
       command = new CommandCap();
       break;
+    case PING:
+      command = new CommandPing();
     default:
+    case QUIT:
+      command = new CommandQuit();
       break;
+
   }
   return command;
 }

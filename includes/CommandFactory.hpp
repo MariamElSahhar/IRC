@@ -8,11 +8,13 @@
 #include "CommandMode.hpp"
 #include "CommandPart.hpp"
 #include "CommandPass.hpp"
+#include "CommandPing.hpp"
 #include "CommandNick.hpp"
 #include "CommandUser.hpp"
 #include "CommandPrivMsg.hpp"
 #include "CommandTopic.hpp"
 #include "CommandCap.hpp"
+#include "CommandQuit.hpp"
 #include "ICommand.hpp"
 
 class ICommand;
@@ -23,13 +25,15 @@ enum CommandType {
   JOIN,
   KICK,
   MODE,
-  PART,  // check if needed
+  PART,
   PASS,
   PRIVMSG,
   TOPIC,
   NICK,
   USER,
 	CAP,
+  PING,
+  QUIT,
 };
 
 class CommandFactory {

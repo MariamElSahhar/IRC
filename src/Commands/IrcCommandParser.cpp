@@ -65,5 +65,9 @@ CommandType IrcCommandParser::getMessageType() {
     return USER;
   if (_command.compare("CAP") == 0)
     return CAP;
+  if (_command.compare("PING") == 0)
+    return PING;
+  if (_command.compare("QUIT") == 0)
+    return QUIT;
   return INVALID;
 }
