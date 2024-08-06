@@ -12,6 +12,7 @@
 #include "CommandUser.hpp"
 #include "CommandPrivMsg.hpp"
 #include "CommandTopic.hpp"
+#include "CommandCap.hpp"
 #include "ICommand.hpp"
 
 class ICommand;
@@ -27,7 +28,8 @@ enum CommandType {
   PRIVMSG,
   TOPIC,
   NICK,
-  USER
+  USER,
+	CAP,
 };
 
 class CommandFactory {

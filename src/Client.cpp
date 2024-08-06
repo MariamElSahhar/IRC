@@ -1,5 +1,7 @@
 #include "Client.hpp"
-#include "ErrorCodes.hpp"
+#include "CommandFactory.hpp"
+#include "IrcClients.hpp"
+#include "IrcCommandParser.hpp"
 #include "Server.hpp"
 
 Client::Client(int fd, Server &server, std::string ip) {
@@ -18,6 +20,7 @@ Client::Client(int fd, Server &server, std::string ip) {
   _operator = true;
   _registered = false;
   _authenticated = false;
+  _disconnected = false;
 }
 
 Client::~Client() {}
@@ -32,6 +35,14 @@ void Client::register_client() {
   _server->sendResponse(_socket,
                         RPL_MYINFO(_server->get_hostname(), get_nickname()));
   _registered = true;
+}
+
+void Client::disconnect(std::string reason) {
+  if (_disconnected)
+    return;
+  _disconnected = true;
+  _server->sendResponse(_socket, YELLOW + reason + RESET);
+  close(_socket);
 }
 
 void Client::authenticate() {
@@ -54,37 +65,24 @@ bool Client::is_operator(void) const {
   return _operator;
 }
 
+bool Client::is_disconnected(void) const {
+  return _disconnected;
+}
+
 bool Client::isMessageReady() {
-  return (!this->fullMessage.empty());
+  return (this->currentMessage.empty());
 }
 
-std::string Client::get_EntireMessage() {
-  return (fullMessage);
+void Client::set_buffer(std::string buffer) {
+  this->currentMessage += buffer;
 }
 
-void Client::messageHandler(char msg[]) {
-  if (!fullMessage.empty()) {
-    fullMessage.clear();
-  }
-
-  if (strstr(msg, "\n") == 0) {
-    currentMessage.append(msg);
-  } else {
-    processMessage(msg);
-  }
-  memset(msg, 0, MAX_BUF);
+std::string Client::get_buffer(void) const {
+  return (this->currentMessage);
 }
 
-void Client::processMessage(const char *msg) {
-  currentMessage.append(
-      msg);  // Append the incoming message to the current message
-  fullMessage.append(
-      currentMessage);  // Append the current message to the full message
-
-  if (!fullMessage.empty() &&
-      (*fullMessage.rbegin() == '\n' || *fullMessage.rbegin() == '\r'))
-    fullMessage.erase(fullMessage.length() - 1);
-  currentMessage.clear();  // Clear the current message
+void Client::clear_buffer(void) {
+  this->currentMessage.clear();
 }
 
 void Client::reply(std::string code, std::string msg) {

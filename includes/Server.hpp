@@ -3,6 +3,7 @@
 
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <sstream>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <poll.h>
@@ -61,6 +62,7 @@ class Server {
   Client *get_client_by_nickname(const std::string &nickname);
   Channel *get_channel(std::string name);
   void add_channel(Channel *channel);
+	void messageHandler(std::string msg, Client *client);
 
   void sendResponse(int clientSocket, std::string msg);
   void cleanUp();

@@ -22,22 +22,19 @@ std::string CommandUser::parse_realname(std::vector<std::string> &params) {
   return realname;
 }
 
+// Validation needs cleanup
 bool CommandUser::validate_command(int &clientSocket,
                                    Client *client,
                                    Server *server,
                                    std::vector<std::string> &params) {
-  // if USER already set
-  if (client->is_registered()) {
-    server->sendResponse(clientSocket,
-                         ERR_ALREADYREGISTERED(server->get_hostname()));
-    return (false);
-  }
+	// Check for authentication is not needed when using USER CMD
   // if PASS isn't set
-  if (!client->is_authenticated()) {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
-    return (false);
-  }
+  // if (!client->is_authenticated()) {
+  //   server->sendResponse(clientSocket,
+  //                        ERR_NOTREGISTERED(server->get_hostname()));
+  //   return (false);
+  // }
+
   // if NICK isn't set
   if (client->get_nickname().empty()) {
     server->sendResponse(clientSocket,
@@ -63,8 +60,14 @@ void CommandUser::execute(int &clientSocket,
                           Client *client,
                           Server *server,
                           std::vector<std::string> *params) {
-  if (!validate_command(clientSocket, client, server, *params))
+  // if USER already set
+  if (client->is_registered())
+    server->sendResponse(clientSocket,
+                         ERR_ALREADYREGISTERED(server->get_hostname()));
+  if (!validate_command(clientSocket, client, server, *params)) {
+    client->disconnect("Server disconnected due to registeration failure.\r\n");
     return;
+  }
 
   // assigning parameters to variables
   std::string username = params->at(0);
@@ -77,6 +80,7 @@ void CommandUser::execute(int &clientSocket,
       realname.empty()) {
     server->sendResponse(clientSocket,
                          ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
+    client->disconnect("Server disconnected due to registeration failure.\r\n");
     return;
   }
 

@@ -6,6 +6,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -13,9 +14,9 @@
       "obj/IrcClients.o",
       "src/IrcClients.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/IrcClients.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/IrcClients.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/IrcClients.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/IrcClients.o"
   },
   {
     "arguments": [
@@ -24,6 +25,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -31,9 +33,9 @@
       "obj/Client.o",
       "src/Client.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Client.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Client.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Client.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Client.o"
   },
   {
     "arguments": [
@@ -42,6 +44,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -49,9 +52,9 @@
       "obj/Channel.o",
       "src/Channel.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Channel.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Channel.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Channel.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Channel.o"
   },
   {
     "arguments": [
@@ -60,6 +63,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -67,9 +71,9 @@
       "obj/main.o",
       "src/main.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/main.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/main.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/main.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/main.o"
   },
   {
     "arguments": [
@@ -78,6 +82,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -85,9 +90,9 @@
       "obj/utils.o",
       "src/utils.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/utils.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/utils.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/utils.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/utils.o"
   },
   {
     "arguments": [
@@ -96,6 +101,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -103,9 +109,9 @@
       "obj/Server.o",
       "src/Server.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Server.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Server.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Server.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Server.o"
   },
   {
     "arguments": [
@@ -114,6 +120,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -121,9 +128,9 @@
       "obj/Commands/CommandTopic.o",
       "src/Commands/CommandTopic.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandTopic.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandTopic.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandTopic.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandTopic.o"
   },
   {
     "arguments": [
@@ -132,6 +139,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -139,9 +147,9 @@
       "obj/Commands/CommandMode.o",
       "src/Commands/CommandMode.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandMode.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandMode.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandMode.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandMode.o"
   },
   {
     "arguments": [
@@ -150,6 +158,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -157,9 +166,9 @@
       "obj/Commands/IrcCommandParser.o",
       "src/Commands/IrcCommandParser.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/IrcCommandParser.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/IrcCommandParser.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/IrcCommandParser.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/IrcCommandParser.o"
   },
   {
     "arguments": [
@@ -168,6 +177,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -175,9 +185,9 @@
       "obj/Commands/CommandInvite.o",
       "src/Commands/CommandInvite.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandInvite.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandInvite.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandInvite.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandInvite.o"
   },
   {
     "arguments": [
@@ -186,6 +196,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -193,9 +204,9 @@
       "obj/Commands/CommandPrivMsg.o",
       "src/Commands/CommandPrivMsg.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandPrivMsg.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandPrivMsg.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandPrivMsg.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandPrivMsg.o"
   },
   {
     "arguments": [
@@ -204,6 +215,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -211,9 +223,9 @@
       "obj/Commands/CommandJoin.o",
       "src/Commands/CommandJoin.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandJoin.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandJoin.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandJoin.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandJoin.o"
   },
   {
     "arguments": [
@@ -222,6 +234,45 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
+      "-I./includes/",
+      "-I./includes/Commands/",
+      "-c",
+      "-o",
+      "obj/Commands/CommandFactory.o",
+      "src/Commands/CommandFactory.cpp"
+    ],
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandFactory.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandFactory.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-g",
+      "-std=c++98",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I./includes/",
+      "-I./includes/Commands/",
+      "-c",
+      "-o",
+      "obj/Commands/CommandUser.o",
+      "src/Commands/CommandUser.cpp"
+    ],
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandUser.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandUser.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-g",
+      "-std=c++98",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -229,9 +280,9 @@
       "obj/Commands/CommandPass.o",
       "src/Commands/CommandPass.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandPass.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandPass.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandPass.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandPass.o"
   },
   {
     "arguments": [
@@ -240,6 +291,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -247,9 +299,9 @@
       "obj/Commands/CommandPart.o",
       "src/Commands/CommandPart.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandPart.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandPart.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandPart.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandPart.o"
   },
   {
     "arguments": [
@@ -258,6 +310,26 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
+      "-I./includes/",
+      "-I./includes/Commands/",
+      "-c",
+      "-o",
+      "obj/Commands/CommandCap.o",
+      "src/Commands/CommandCap.cpp"
+    ],
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandCap.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandCap.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-g",
+      "-std=c++98",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -265,9 +337,9 @@
       "obj/Commands/CommandNick.o",
       "src/Commands/CommandNick.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandNick.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandNick.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandNick.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandNick.o"
   },
   {
     "arguments": [
@@ -276,6 +348,7 @@
       "-std=c++98",
       "-Wall",
       "-Wextra",
+      "-Werror",
       "-I./includes/",
       "-I./includes/Commands/",
       "-c",
@@ -283,8 +356,8 @@
       "obj/Commands/CommandKick.o",
       "src/Commands/CommandKick.cpp"
     ],
-    "directory": "/home/m_kamal/Work/42_Work/FT_IRC",
-    "file": "/home/m_kamal/Work/42_Work/FT_IRC/src/Commands/CommandKick.cpp",
-    "output": "/home/m_kamal/Work/42_Work/FT_IRC/obj/Commands/CommandKick.o"
+    "directory": "/home/m_kamal/Work/42_Work/IRC",
+    "file": "/home/m_kamal/Work/42_Work/IRC/src/Commands/CommandKick.cpp",
+    "output": "/home/m_kamal/Work/42_Work/IRC/obj/Commands/CommandKick.o"
   }
 ]

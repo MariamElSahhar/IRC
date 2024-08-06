@@ -12,6 +12,7 @@ void CommandPass::execute(int &clientSocket,
   if (param->size() < 1) {
     server->sendResponse(clientSocket,
                          ERR_NEEDMOREPARAMS("PASS", server->get_hostname()));
+    client->disconnect("Server disconnected due to authentication failure\r\n");
     return;
   }
 
@@ -25,7 +26,9 @@ void CommandPass::execute(int &clientSocket,
   // check if the password provided match with the one provided as av[2];
   if ((*param)[0] == server->getPassword())
     client->authenticate();
-  else
+  else {
     server->sendResponse(clientSocket,
                          ERR_PASSWDMISMATCH(server->get_hostname()));
+    client->disconnect("Server disconnected due to authentication failure\r\n");
+  }
 }

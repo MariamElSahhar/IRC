@@ -164,6 +164,7 @@ void Server::waitConnections() {
 }
 
 void Server::sendResponse(int clientSocket, std::string msg) {
+  std::cout << "**: " << msg << std::endl;  // temp
   Client *client = ircClients->getClient(clientSocket);
   if (client != NULL)
     client->pendingWrite.push_back(msg);
@@ -181,7 +182,6 @@ void Server::acceptConnection() {
               << std::endl;
     return;
   }
-
   // creation of the poll
   pollfd clientPollfd;
   clientPollfd.fd = clientSocket;
@@ -211,7 +211,6 @@ int Server::readMessage(int i) {
                 << clientFd << std::endl;
     else
       std::cerr << YELLOW "Connection Error!" RESET << std::endl;
-
     //  deleting client that disconnected
     if (!ircClients->removeClient(clientFd)) {
       std::cerr << "Failed to remove client!" << std::endl;
@@ -225,29 +224,53 @@ int Server::readMessage(int i) {
     }
     return (-1);
   }
-  std::cout << "\nReceived: " << bytesRecv
-            << " bytes Raw msg:" << std::string(buffer);
+  std::cout << "Received: " << bytesRecv
+            << " bytes Raw msg: " << std::string(buffer);
   Client *currentClient = ircClients->getClient(clientFd);
   if (currentClient != NULL) {
-    currentClient->messageHandler(buffer);
-    if (currentClient->isMessageReady()) {
-      std::cout << "Message ready to be processed: "
-                << currentClient->get_EntireMessage() << std::endl;
-      IrcCommandParser parser =
-          IrcCommandParser(std::string(currentClient->get_EntireMessage()));
-      CommandType commandType = parser.getMessageType();
-      if (commandType != INVALID) {
-        std::cout << "commandType " << commandType << std::endl;
-        ICommand *command = commandFactory->createCommand(commandType);
-        std::vector<std::string> params = parser.getParams();
-        command->execute(clientFd, currentClient, this, &params);
-        delete command;
-      } else
-        std::cerr << "Invalid message received!" << std::endl;
-    }
+    this->messageHandler(buffer, currentClient);
   } else
     std::cerr << "Client not found!" << std::endl;
   return 0;
+}
+
+void Server::messageHandler(std::string msg, Client *client) {
+  std::string cmd;
+  std::string line;
+  std::istringstream iss(msg);
+  int clientFd = client->get_socket();
+
+  while (std::getline(iss, line)) {
+    if (client->is_disconnected())
+      break;
+    if (line.empty())
+      continue;
+    // Check of line ends in \r\n
+    if (line.length() > 0 && line[line.length() - 1] != '\r') {
+      client->set_buffer(line);
+      continue;
+    }
+    // If the line ends in \r, it is a complete command
+    // If there is a buffer, append it to the line and clear it
+    try {
+      if (client->get_buffer().length() > 0) {
+        line = client->get_buffer() + line;
+        client->clear_buffer();
+      }
+      IrcCommandParser parser = IrcCommandParser(line);
+      CommandType commandType = parser.getMessageType();
+      if (commandType != INVALID) {
+        ICommand *command = commandFactory->createCommand(commandType);
+        std::vector<std::string> params = parser.getParams();
+        command->execute(clientFd, client, this, &params);
+        delete command;
+      } else
+        this->sendResponse(clientFd,
+                           ERR_UNKNOWNCOMMAND(, client->get_hostname()));
+    } catch (std::exception &e) {
+      std::cerr << "Error: " << e.what() << std::endl;
+    }
+  }
 }
 
 void Server::add_channel(Channel *channel) {

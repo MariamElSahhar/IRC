@@ -23,11 +23,12 @@ void CommandNick::execute(int &clientSocket,
                           Client *client,
                           Server *server,
                           std::vector<std::string> *params) {
-  if (!client->is_authenticated()) {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
-    return;
-  }
+	// Check for authentication is not needed when using NICK CMD
+  // if (!client->is_authenticated()) {
+  //   server->sendResponse(clientSocket,
+  //                        ERR_NOTREGISTERED(server->get_hostname()));
+  //   return;
+  // }
   if (params->size() < 1) {
     server->sendResponse(clientSocket,
                          ERR_NEEDMOREPARAMS("NICK", server->get_hostname()));
