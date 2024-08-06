@@ -1,0 +1,5 @@
+I don't think Client->disconnect shuts the connection clearly, ircClients->removeClient isn't called server side when client is disconnected.
+
+Some Error codes are not printed correctly in IRSSI (421 is an example)
+
+When closing IRSSI using /quit a CMD is issued to server (QUIT :leaving) that needs to be handled, similar to CAP.

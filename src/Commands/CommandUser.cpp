@@ -27,14 +27,6 @@ bool CommandUser::validate_command(int &clientSocket,
                                    Client *client,
                                    Server *server,
                                    std::vector<std::string> &params) {
-	// Check for authentication is not needed when using USER CMD
-  // if PASS isn't set
-  // if (!client->is_authenticated()) {
-  //   server->sendResponse(clientSocket,
-  //                        ERR_NOTREGISTERED(server->get_hostname()));
-  //   return (false);
-  // }
-
   // if NICK isn't set
   if (client->get_nickname().empty()) {
     server->sendResponse(clientSocket,
@@ -47,12 +39,6 @@ bool CommandUser::validate_command(int &clientSocket,
                          ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
     return (false);
   }
-  // realname must be prefixed by :
-  // if (params.at(3)[0] != ':') {
-  //   server->sendResponse(clientSocket,
-  //                        ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
-  //   return (false);
-  // }
   return (true);
 }
 

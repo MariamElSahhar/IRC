@@ -34,7 +34,6 @@ class Client {
  public:
   Client(int fd, Server &server, std::string ip);
   ~Client();
-  void messageHandler(std::string msg);
   bool isMessageReady();
 
   std::string get_EntireMessage();
