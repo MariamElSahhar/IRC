@@ -42,6 +42,7 @@ ICommand *CommandFactory::createCommand(CommandType cmdType) {
       break;
     case PING:
       command = new CommandPing();
+      break;
     case QUIT:
       command = new CommandQuit();
       break;
