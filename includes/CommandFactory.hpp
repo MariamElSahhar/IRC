@@ -15,6 +15,8 @@
 #include "CommandTopic.hpp"
 #include "CommandCap.hpp"
 #include "CommandQuit.hpp"
+#include "CommandOper.hpp"
+#include "CommandUnoper.hpp"
 #include "ICommand.hpp"
 
 class ICommand;
@@ -31,6 +33,8 @@ enum CommandType {
   TOPIC,
   NICK,
   USER,
+	OPER,
+	UNOPER,
 	CAP,
   PING,
   QUIT,

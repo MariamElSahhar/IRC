@@ -17,8 +17,9 @@ void CommandInvite::execute(int &clientSocket,
 
   if (client->is_authenticated() == false)  // client not authenticated
   {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(client->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
     return;
   }
 

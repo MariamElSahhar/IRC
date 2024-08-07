@@ -3,7 +3,6 @@
 
 #include <arpa/inet.h>
 #include <fcntl.h>
-#include <sstream>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <poll.h>
@@ -17,6 +16,7 @@
 #include <cstring>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <utility>
 #include <vector>
 #include "CommandFactory.hpp"
@@ -44,10 +44,11 @@ class CommandFactory;
 class Channel;
 
 class Server {
-private:
+ private:
   int portNb;
   int socketNb;
   std::string password;
+  std::string oper_pass;
   std::string ipAddress;
   std::string hostName;
   std::vector<pollfd> pollFdVector;
@@ -72,18 +73,19 @@ private:
   void acceptConnection();
   std::string getPassword();
   std::string get_hostname();
+  std::string get_oper_password(void);
   int readMessage(int indexFd);
 
   Client *get_client_by_nickname(const std::string &nickname);
   Channel *get_channel(std::string name);
   void add_channel(Channel *channel);
-	void messageHandler(std::string msg, Client *client);
+  void messageHandler(std::string msg, Client *client);
 
   void sendResponse(int clientSocket, std::string msg);
   void cleanUp();
 
-  void delete_client_by_nickname(const std::string &nickname, std::string reason);
-
+  void delete_client_by_nickname(const std::string &nickname,
+                                 std::string reason);
 };
 
 #endif

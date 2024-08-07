@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #include "CommandFactory.hpp"
 #include "IrcClients.hpp"
 #include "IrcCommandParser.hpp"
@@ -25,6 +26,7 @@ Server::Server(int port,
     : portNb(port),
       socketNb(-1),
       password(password),
+      oper_pass(g_oper_password),
       ipAddress(IP_BIND),
       hostName(HOSTNAME),
       pollFdVector(),
@@ -62,6 +64,10 @@ std::string Server::getPassword() {
 
 std::string Server::get_hostname() {
   return (this->hostName);
+}
+
+std::string Server::get_oper_password(void) {
+  return oper_pass;
 }
 
 void Server::createSocket(int fd) {

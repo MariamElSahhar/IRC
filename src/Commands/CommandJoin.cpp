@@ -75,6 +75,7 @@ void CommandJoin::execute(int &clientSocket,
     channel->topic(client, param);
     channel->names(client);
   } else
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
 }

@@ -37,7 +37,8 @@ void CommandPart::execute(int &clientSocket,
       channel->part(client, "");
     }
   } else {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
   }
 }

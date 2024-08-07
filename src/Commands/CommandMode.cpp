@@ -58,7 +58,8 @@ void CommandMode::execute(int &clientSocket,
     else
       server->sendResponse(clientSocket, ERR_UNKNOWNMODE(channel->get_name()));
   } else {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(server->get_hostname(), client->get_nickname()));
   }
 }

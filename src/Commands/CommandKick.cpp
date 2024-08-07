@@ -60,6 +60,7 @@ void CommandKick::execute(int &clientSocket,
       reason = "Kicked";
     channel->kick(target, client, reason);
   } else
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
 }

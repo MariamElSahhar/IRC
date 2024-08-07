@@ -15,7 +15,7 @@ Client::Client(int fd, Server &server, std::string ip) {
   _servername = "";
   _realname = "";
 
-  _operator = true;
+  _operator = false;
   _registered = false;
   _authenticated = false;
   _disconnected = false;

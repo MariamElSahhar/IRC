@@ -5,7 +5,7 @@ CommandFactory::CommandFactory() {}
 CommandFactory::~CommandFactory() {}
 
 ICommand *CommandFactory::createCommand(CommandType cmdType) {
-  ICommand *command = NULL;
+  ICommand *command;
   switch (cmdType) {
     case INVITE:
       command = new CommandInvite();
@@ -37,6 +37,12 @@ ICommand *CommandFactory::createCommand(CommandType cmdType) {
     case USER:
       command = new CommandUser();
       break;
+    case OPER:
+      command = new CommandOper();
+      break;
+    case UNOPER:
+      command = new CommandUnOper();
+      break;
     case CAP:
       command = new CommandCap();
       break;
@@ -47,6 +53,7 @@ ICommand *CommandFactory::createCommand(CommandType cmdType) {
       command = new CommandQuit();
       break;
     default:
+			command = NULL;
       break;
   }
   return command;
