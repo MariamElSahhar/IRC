@@ -9,8 +9,8 @@ void CommandQuit::execute(int &clientSocket,
                           Server *server,
                           std::vector<std::string> *param) {
   (void)param;
+  (void)clientSocket;
   std::string quit = "QUIT :leaving\r\n";
 
-  server->sendResponse(clientSocket, quit);
-  server->delete_client_by_nickname(client->get_nickname());
+  server->delete_client_by_nickname(client->get_nickname(), quit);
 }
