@@ -164,7 +164,6 @@ void Server::waitConnections() {
 }
 
 void Server::sendResponse(int clientSocket, std::string msg) {
-  std::cout << "For visibility:\n\t" << msg << std::endl;  // temp
   Client *client = ircClients->getClient(clientSocket);
   if (client != NULL)
     client->pendingWrite.push_back(msg);

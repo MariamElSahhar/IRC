@@ -1,5 +1,6 @@
 REPLACE client->disconnect with Server::delete_client_by_nickname !*DONE*!
+When closing IRSSI using /quit a CMD is issued to server (QUIT :leaving) that needs to be handled, similar to CAP. !*DONE*!
 
-Some Error codes are not printed correctly in IRSSI (421 is an example)
+Some Error codes are not printed correctly in IRSSI (421 is an example).
 
-When closing IRSSI using /quit a CMD is issued to server (QUIT :leaving) that needs to be handled, similar to CAP.
+Seg Fault upon joining the same channel with 2 different Users? Needs investigation.
