@@ -5,10 +5,12 @@ CommandCap::CommandCap() {}
 CommandCap::~CommandCap() {}
 
 void CommandCap::execute(int &clientSocket,
-                         Client * /*client*/,
+                         Client * client,
                          Server *server,
-                         std::vector<std::string> * /*params*/) {
-	// ERROR CODE IS PLACEHOLDER
+                         std::vector<std::string> * params) {
+  (void)params;
+  (void)client;
+
 	server->sendResponse(clientSocket, "CAP * LS :\r\n");
 }
 

@@ -1,4 +1,5 @@
 I don't think Client->disconnect shuts the connection clearly, ircClients->removeClient isn't called server side when client is disconnected.
+REPLACE client->disconnect with Server::delete_client_by_nickname
 
 Some Error codes are not printed correctly in IRSSI (421 is an example)
 
