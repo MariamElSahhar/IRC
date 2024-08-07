@@ -1,7 +1,5 @@
 #include "Client.hpp"
-#include "CommandFactory.hpp"
 #include "IrcClients.hpp"
-#include "IrcCommandParser.hpp"
 #include "Server.hpp"
 
 Client::Client(int fd, Server &server, std::string ip) {
@@ -37,6 +35,7 @@ void Client::register_client() {
   _registered = true;
 }
 
+// DEPRACATED --> USE Server::delete_client_by_nickname()
 void Client::disconnect(std::string reason) {
   if (_disconnected)
     return;

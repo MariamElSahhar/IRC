@@ -2,9 +2,8 @@
 #include "Server.hpp"
 #include "sstream"
 
-Channel::Channel(std::string name, std::string hostname, Server &server)
-    : _server(&server),
-      _name(name),
+Channel::Channel(std::string name, std::string hostname)
+    : _name(name),
       _hostname(hostname),
       _topic(""),
       _pass(""),
@@ -47,9 +46,9 @@ void Channel::join(Client *client) {
 }
 
 void Channel::part(Client *client, std::string cause) {
-	this->remove_channel_operator(client);
-	this->broadcast(client, "PART", this->get_name(), cause);
-	this->leave(client);
+  this->remove_channel_operator(client);
+  this->broadcast(client, "PART", this->get_name(), cause);
+  this->leave(client);
 }
 
 void Channel::quit(Client *client) {

@@ -82,7 +82,7 @@ private:
   void sendResponse(int clientSocket, std::string msg);
   void cleanUp();
 
-  void delete_client_by_nickname(const std::string &nickname);
+  void delete_client_by_nickname(const std::string &nickname, std::string reason);
 
 };
 

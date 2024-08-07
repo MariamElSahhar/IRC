@@ -273,11 +273,11 @@ void Server::messageHandler(std::string msg, Client *client) {
   }
 }
 
-// Add a string output for reason and replace client->disconnect() with this
-// function
-void Server::delete_client_by_nickname(const std::string &nickname) {
+void Server::delete_client_by_nickname(const std::string &nickname,
+                                       std::string reason) {
   Client *client = ircClients->getClientByNickname(nickname);
 
+  this->sendResponse(client->get_socket(), reason);
   if (client != NULL) {
     std::vector<pollfd>::iterator it2;
     for (it2 = pollFdVector.begin(); it2 != pollFdVector.end(); it2++) {

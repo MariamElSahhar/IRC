@@ -3,3 +3,5 @@ en.subject.pdf
 .cache/
 .github/
 .clangd
+CMakeLists.txt
+compile_commands.json

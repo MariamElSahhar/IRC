@@ -2,13 +2,11 @@
 #define CHANNELL_HPP
 
 #include "Client.hpp"
-#include "ErrorCodes.hpp"
 
 class Server;
 
 class Channel {
  private:
-  Server *_server;
   std::string _name;
   std::string _hostname;
   std::string _topic;
@@ -28,7 +26,7 @@ class Channel {
 
  public:
   // Constructors and Destructors
-  Channel(std::string name, std::string hostname, Server &server);
+  Channel(std::string name, std::string hostname);
   Channel(const Channel &src);
   ~Channel(void);
 

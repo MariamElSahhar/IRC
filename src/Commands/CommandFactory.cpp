@@ -5,7 +5,7 @@ CommandFactory::CommandFactory() {}
 CommandFactory::~CommandFactory() {}
 
 ICommand *CommandFactory::createCommand(CommandType cmdType) {
-  ICommand *command;
+  ICommand *command = NULL;
   switch (cmdType) {
     case INVITE:
       command = new CommandInvite();

@@ -51,7 +51,9 @@ void CommandUser::execute(int &clientSocket,
     server->sendResponse(clientSocket,
                          ERR_ALREADYREGISTERED(server->get_hostname()));
   if (!validate_command(clientSocket, client, server, *params)) {
-    client->disconnect("Server disconnected due to registeration failure.\r\n");
+    server->delete_client_by_nickname(
+        client->get_nickname(),
+        "Server disconnected due to authentication failure\r\n");
     return;
   }
 
@@ -66,7 +68,9 @@ void CommandUser::execute(int &clientSocket,
       realname.empty()) {
     server->sendResponse(clientSocket,
                          ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
-    client->disconnect("Server disconnected due to registeration failure.\r\n");
+    server->delete_client_by_nickname(
+        client->get_nickname(),
+        "Server disconnected due to authentication failure\r\n");
     return;
   }
 
