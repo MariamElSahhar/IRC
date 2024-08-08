@@ -1,12 +1,14 @@
 #ifndef CHANNELL_HPP
 #define CHANNELL_HPP
 
+#include "Server.hpp"
 #include "Client.hpp"
 
 class Server;
 
 class Channel {
  private:
+	Server *_server;
   std::string _name;
   std::string _hostname;
   std::string _topic;
@@ -26,7 +28,7 @@ class Channel {
 
  public:
   // Constructors and Destructors
-  Channel(std::string name, std::string hostname);
+  Channel(std::string name, Server &server);
   Channel(const Channel &src);
   ~Channel(void);
 
@@ -36,9 +38,9 @@ class Channel {
   void join(Client *client);
 	void part(Client *client, std::string cause);
   void quit(Client *client);
-  void topic(Client *client, std::vector<std::string> params);
-  void names(Client *client);
-  void kick(Client *client, Client *target, std::string cause);
+  void topic(Server &server, Client *client, std::vector<std::string> params);
+  void names(Server &server, Client *client);
+  void kick(Server &server, Client *client, Client *target, std::string cause);
 
   void add_channel_operator(Client *client);
   void remove_channel_operator(Client *client);

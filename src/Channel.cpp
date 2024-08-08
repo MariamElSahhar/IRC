@@ -1,10 +1,12 @@
 #include "Channel.hpp"
+#include "ErrorCodes.hpp"
 #include "Server.hpp"
 #include "sstream"
 
-Channel::Channel(std::string name, std::string hostname)
-    : _name(name),
-      _hostname(hostname),
+Channel::Channel(std::string name, Server &server)
+    : _server(&server),
+      _name(name),
+      _hostname(server.get_hostname()),
       _topic(""),
       _pass(""),
       _user_limit(0),
@@ -57,13 +59,21 @@ void Channel::quit(Client *client) {
   this->leave(client);
 }
 
-void Channel::topic(Client *client, std::vector<std::string> params) {
+void Channel::topic(Server &server,
+                    Client *client,
+                    std::vector<std::string> params) {
   // Get Channel Topic
   if (params.size() == 1) {
     if (this->get_topic().empty())
-      client->reply("331", this->get_name() + " " + ":No Topic Set.\r\n");
+      server.sendResponse(
+          client->get_socket(),
+          RPL_NOTOPIC(client->generatePrefix(), client->get_nickname(),
+                      this->get_name()));
     else
-      client->reply("332", this->get_name() + " " + this->get_topic());
+      server.sendResponse(
+          client->get_socket(),
+          RPL_TOPIC(client->generatePrefix(), client->get_nickname(),
+                    this->get_name(), this->get_topic()));
   }
   // Set Channel Topic
   if (params.size() == 2) {
@@ -73,16 +83,24 @@ void Channel::topic(Client *client, std::vector<std::string> params) {
   }
 }
 
-void Channel::names(Client *client) {
-  client->reply("353",
-                "= " + this->get_name() + " :" + this->get_client_names());
-  client->reply("366", this->get_name() + " :End of NAMES list");
+void Channel::names(Server &server, Client *client) {
+  server.sendResponse(
+      client->get_socket(),
+      RPL_NAMREPLY(client->generatePrefix(), client->get_nickname(),
+                   this->get_name(), this->get_client_names()));
+  server.sendResponse(client->get_socket(),
+                      RPL_ENDOFNAMES(client->generatePrefix(),
+                                     client->get_nickname(), this->get_name()));
 }
 
-void Channel::kick(Client *client, Client *target, std::string cause) {
+void Channel::kick(Server &server,
+                   Client *client,
+                   Client *target,
+                   std::string cause) {
   if (client != target && !is_channel_operator(client->get_nickname())) {
-    client->reply("482",
-                  this->get_name() + " " + ":You're not a channel operator");
+    server.sendResponse(
+        client->get_socket(),
+        ERR_CHANOPRIVSNEEDED(this->get_name(), server.get_hostname()));
     return;
   }
   std::string msg = target->get_nickname() + " :" + cause;
@@ -126,7 +144,8 @@ void Channel::leave(Client *client) {
 
 // Set mode and unset mode are not finished yet
 // @MIkamal88: when you finish this could you please check this ft
-// isTopicRestrictedToOperators (below)? we will need it for topic. Thank you
+// isTopicRestrictedToOperators (below)? we will need it for topic. Thank
+// you
 void Channel::set_mode(char mode,
                        Server &server,
                        std::vector<std::string> params,

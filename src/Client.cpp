@@ -84,6 +84,7 @@ void Client::clear_buffer(void) {
   this->currentMessage.clear();
 }
 
+// DEPRACATED Please use server.sendResponse()
 void Client::reply(std::string code, std::string msg) {
   std::string hostname_str = ":" + _server_hostname + " ";
   std::string code_str;

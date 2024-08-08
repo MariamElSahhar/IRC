@@ -33,7 +33,7 @@ void CommandJoin::execute(int &clientSocket,
           clientSocket,
           ERR_NOSUCHCHANNEL(channel_name, server->get_hostname()) +
               " Creating channel\r\n");
-      channel = new Channel(channel_name, server->get_hostname());
+      channel = new Channel(channel_name, *server);
       server->add_channel(channel);
       channel->increase_user_quantity();
       channel->join(client);
