@@ -4,3 +4,7 @@ When closing IRSSI using /quit a CMD is issued to server (QUIT :leaving) that ne
 Some Error codes are not printed correctly in IRSSI (421 is an example).
 
 Seg Fault upon joining the same channel with 2 different Users? Needs investigation.
+
+Need to check IRSSI documentation for /unoper CMD. Says invalid CMD?
+
+@Paula @Mariam Please check the comment on l48 in CommandOPER.cpp and check if it happens for your client as well.

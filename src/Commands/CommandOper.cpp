@@ -1,4 +1,5 @@
 #include "CommandOper.hpp"
+#include <string>
 #include "Channel.hpp"
 #include "Server.hpp"
 
@@ -41,10 +42,12 @@ void CommandOper::execute(int &clientSocket,
       } else
         tar->set_operator((*params)[1]);
       if (tar->is_operator()) {
+        std::string tar_is = tar_name + " is";
         if (client->get_nickname() != tar_name)
-          server->sendResponse(clientSocket, RPL_YOUREOPER(tar_name + " is "));
-        std::string you = "You";
-        server->sendResponse(tar->get_socket(), RPL_YOUREOPER(you + " are "));
+          server->sendResponse(clientSocket, RPL_YOUREOPER(tar_is));
+        std::string you = "You are";  // IRRSI doesn't show the 'You' for some
+                                      // reason, only displays 'are' ??
+        server->sendResponse(tar->get_socket(), RPL_YOUREOPER(you));
       } else
         server->sendResponse(clientSocket,
                              ERR_PASSWDMISMATCH(server->get_hostname()));

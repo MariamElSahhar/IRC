@@ -282,6 +282,8 @@ void Server::delete_client_by_nickname(const std::string &nickname,
                                        std::string reason) {
   Client *client = ircClients->getClientByNickname(nickname);
 
+  std::cerr << YELLOW "Client disconnected from socket fd: " RESET
+            << client->get_socket() << std::endl;
   this->sendResponse(client->get_socket(), reason);
   if (client != NULL) {
     std::vector<pollfd>::iterator it2;
