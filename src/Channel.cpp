@@ -44,6 +44,7 @@ Channel &Channel::operator=(const Channel &src) {
 
 void Channel::join(Client *client) {
   this->_clients.push_back(client);
+  this->add_channel_operator(client);
   this->broadcast(client, "JOIN", this->get_name(), "");
 }
 
@@ -104,7 +105,7 @@ void Channel::kick(Server &server,
     return;
   }
   std::string msg = target->get_nickname() + " :" + cause;
-  this->broadcast(client, "KICK", this->get_name(), msg);
+  this->broadcast(client, "KICK", this->get_only_name(), msg);
   this->leave(target);
 }
 
@@ -307,7 +308,7 @@ void Channel::broadcast(Client *sender,
        it != this->_clients.end(); it++) {
     if (command == "PRIVMSG" && *it == sender)
       continue;
-    if (command == "PRIVMSG") {
+    if (command == "PRIVMSG" || command == "KICK") {
        (*it)->broadcast(sender, command + " " + this->get_only_name(), "", message);
     }else{
        (*it)->broadcast(sender, command, target, message);
