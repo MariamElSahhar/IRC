@@ -307,8 +307,17 @@ void Channel::broadcast(Client *sender,
        it != this->_clients.end(); it++) {
     if (command == "PRIVMSG" && *it == sender)
       continue;
-    (*it)->broadcast(sender, command, target, message);
+    if (command == "PRIVMSG") {
+       (*it)->broadcast(sender, command + " " + this->get_only_name(), "", message);
+    }else{
+       (*it)->broadcast(sender, command, target, message);
+    }
   }
+}
+
+std::string Channel::get_only_name(void) const {
+  std::cout << "name: " << this->_name << std::endl;
+  return this->_name;
 }
 
 std::string Channel::get_name(void) const {

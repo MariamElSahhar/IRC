@@ -68,6 +68,7 @@ class Channel {
   std::string get_name(void) const;
   std::string get_topic(void) const;
   std::string get_key(void) const;
+  std::string get_only_name(void) const;
   std::string get_modes(void);
   int get_user_limit(void) const;
   int get_user_quantity(void) const;

@@ -25,10 +25,6 @@ void CommandJoin::execute(int &clientSocket,
     Channel *channel = server->get_channel(channel_name);
     // Create channel if it does not exist, The first user to join creates it.
     if (channel == NULL) {
-      if (!client->is_operator()) {
-        server->sendResponse(clientSocket, ERR_NOPRIVILEGES(channel_name));
-        return;
-      }
       server->sendResponse(
           clientSocket,
           ERR_NOSUCHCHANNEL(channel_name, server->get_hostname()) +
