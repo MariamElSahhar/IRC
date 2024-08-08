@@ -72,8 +72,8 @@ void CommandJoin::execute(int &clientSocket,
     // Channel Topic and Names
     std::vector<std::string> param;
     param.push_back(channel->get_name());
-    channel->topic(client, param);
-    channel->names(client);
+    channel->topic(*server, client, param);
+    channel->names(*server, client);
   } else
     server->sendResponse(
         clientSocket,

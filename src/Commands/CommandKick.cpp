@@ -58,7 +58,7 @@ void CommandKick::execute(int &clientSocket,
       reason = (*params)[2];
     else
       reason = "Kicked";
-    channel->kick(target, client, reason);
+    channel->kick(*server, target, client, reason);
   } else
     server->sendResponse(
         clientSocket,
