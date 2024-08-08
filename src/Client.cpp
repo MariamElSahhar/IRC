@@ -84,27 +84,6 @@ void Client::clear_buffer(void) {
   this->currentMessage.clear();
 }
 
-// DEPRACATED Please use server.sendResponse()
-void Client::reply(std::string code, std::string msg) {
-  std::string hostname_str = ":" + _server_hostname + " ";
-  std::string code_str;
-  std::string nickname_str;
-
-  if (code.empty())
-    code_str = "";
-  else
-    code_str = code + " ";
-
-  if (_nickname.empty())
-    nickname_str = "unregistered ";
-  else
-    nickname_str = _nickname + " ";
-
-  std::string reply = hostname_str + code_str + nickname_str + msg + "\r\n";
-  std::cout << "Reply: " << reply << std::endl;
-  send(_socket, reply.c_str(), reply.length(), 0);
-}
-
 std::string Client::get_servername() const {
   return (_servername);
 }
@@ -154,6 +133,26 @@ void Client::set_hostname(std::string hostname) {
   _hostname = hostname;
 }
 
+// DEPRACATED Please use server.sendResponse()
+void Client::reply(std::string code, std::string msg) {
+  std::string hostname_str = ":" + _server_hostname + " ";
+  std::string code_str;
+  std::string nickname_str;
+
+  if (code.empty())
+    code_str = "";
+  else
+    code_str = code + " ";
+
+  if (_nickname.empty())
+    nickname_str = "unregistered ";
+  else
+    nickname_str = _nickname + " ";
+
+  std::string reply = hostname_str + code_str + nickname_str + msg + "\r\n";
+  send(_socket, reply.c_str(), reply.length(), 0);
+}
+
 void Client::broadcast(Client *sender,
                        std::string command,
                        std::string target,
@@ -177,8 +176,6 @@ void Client::broadcast(Client *sender,
   // Format ":<sender> <command> <target> :<message>\r\n"
   std::string reply =
       sender_str + command_str + target_str + message_str + "\r\n";
-
-  std::cout << "Broadcast: " << reply << std::endl;
 
   send(_socket, reply.c_str(), reply.length(), 0);
   return;

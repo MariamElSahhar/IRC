@@ -7,4 +7,8 @@ Seg Fault upon joining the same channel with 2 different Users? Needs investigat
 
 Need to check IRSSI documentation for /unoper CMD. Says invalid CMD?
 
+Broadcast not working as intended, needs to be redone.
+
+I don't think PRIVMSG is working properly.
+
 @Paula @Mariam Please check the comment on l48 in CommandOPER.cpp and check if it happens for your client as well.
