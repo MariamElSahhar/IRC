@@ -35,15 +35,6 @@ void Client::register_client() {
   _registered = true;
 }
 
-// DEPRACATED --> USE Server::delete_client_by_nickname()
-void Client::disconnect(std::string reason) {
-  if (_disconnected)
-    return;
-  _disconnected = true;
-  _server->sendResponse(_socket, YELLOW + reason + RESET);
-  close(_socket);
-}
-
 void Client::authenticate() {
   _authenticated = true;
 }
@@ -70,6 +61,12 @@ bool Client::is_disconnected(void) const {
 
 bool Client::isMessageReady() {
   return (this->currentMessage.empty());
+}
+
+void Client::set_disconnected(void) {
+  if (_disconnected)
+    return;
+  _disconnected = true;
 }
 
 void Client::set_buffer(std::string buffer) {

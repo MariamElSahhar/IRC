@@ -62,7 +62,7 @@ class Client {
   std::deque<std::string> pendingWrite;
 
   void authenticate(void);
-	void disconnect(std::string reason);
+	void set_disconnected(void);
   void register_client(void);
   std::string generatePrefix(void);
 

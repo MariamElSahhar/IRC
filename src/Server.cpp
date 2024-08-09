@@ -232,7 +232,7 @@ int Server::readMessage(int i) {
   std::cout << "Received: " << bytesRecv
             << " bytes Raw msg: " << std::string(buffer);
   Client *currentClient = ircClients->getClient(clientFd);
-  if (currentClient != NULL) {
+  if (currentClient != NULL && !currentClient->is_disconnected()) {
     this->messageHandler(buffer, currentClient);
   } else
     std::cerr << "Client not found!" << std::endl;
@@ -282,6 +282,7 @@ void Server::delete_client_by_nickname(const std::string &nickname,
                                        std::string reason) {
   Client *client = ircClients->getClientByNickname(nickname);
 
+	client->set_disconnected();
   std::cerr << YELLOW "Client disconnected from socket fd: " RESET
             << client->get_socket() << std::endl;
   this->sendResponse(client->get_socket(), reason);
