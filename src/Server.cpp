@@ -250,6 +250,10 @@ void Server::messageHandler(std::string msg, Client *client) {
   int clientFd = client->get_socket();
 
   while (std::getline(iss, line)) {
+    if(ircClients->getClient(clientFd) == NULL){
+      std::cout << "Warning: client no longer connected, ignoring its messages " << msg << std::endl;
+      break;
+    }
     if (client->is_disconnected())
       break;
     if (line.empty())
