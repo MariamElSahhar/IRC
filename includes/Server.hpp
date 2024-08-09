@@ -71,19 +71,19 @@ class Server {
   void createSocket(int fd);
   void waitConnections();
   void acceptConnection();
+  void add_channel(Channel *channel);
   std::string getPassword();
   std::string get_hostname();
   std::string get_oper_password(void);
+  std::vector<Channel *> list_channels(void);
+  Channel *get_channel(std::string name);
+  Client *get_client_by_nickname(const std::string &nickname);
   int readMessage(int indexFd);
 
-  Client *get_client_by_nickname(const std::string &nickname);
-  Channel *get_channel(std::string name);
-  void add_channel(Channel *channel);
   void messageHandler(std::string msg, Client *client);
-
   void sendResponse(int clientSocket, std::string msg);
-  void cleanUp();
 
+  void cleanUp();
   void delete_client_by_nickname(const std::string &nickname,
                                  std::string reason);
 };

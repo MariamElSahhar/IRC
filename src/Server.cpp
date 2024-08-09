@@ -37,6 +37,10 @@ Server::Server(int port,
 
 Server::~Server() {
   cleanUp();
+  // Delete all channels from the vector
+  for (size_t i = 0; i < _channels.size(); i++) {
+    delete _channels[i];
+  }
 }
 
 void Server::start() {
@@ -232,9 +236,9 @@ int Server::readMessage(int i) {
   std::cout << "Received: " << bytesRecv
             << " bytes Raw msg: " << std::string(buffer);
   Client *currentClient = ircClients->getClient(clientFd);
-  if (currentClient != NULL && !currentClient->is_disconnected()) {
+  if (currentClient != NULL)
     this->messageHandler(buffer, currentClient);
-  } else
+  else
     std::cerr << "Client not found!" << std::endl;
   return 0;
 }
@@ -282,7 +286,7 @@ void Server::delete_client_by_nickname(const std::string &nickname,
                                        std::string reason) {
   Client *client = ircClients->getClientByNickname(nickname);
 
-	client->set_disconnected();
+  client->set_disconnected();
   std::cerr << YELLOW "Client disconnected from socket fd: " RESET
             << client->get_socket() << std::endl;
   this->sendResponse(client->get_socket(), reason);
@@ -305,6 +309,10 @@ Client *Server::get_client_by_nickname(const std::string &nickname) {
 
 void Server::add_channel(Channel *channel) {
   _channels.push_back(channel);
+}
+
+std::vector<Channel *> Server::list_channels(void) {
+  return _channels;
 }
 
 Channel *Server::get_channel(std::string name) {

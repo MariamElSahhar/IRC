@@ -21,7 +21,7 @@ Channel::Channel(const Channel &src) {
 }
 
 Channel::~Channel(void) {
-  this->_clients.clear();
+  _clients.clear();
 }
 
 Channel &Channel::operator=(const Channel &src) {
@@ -309,9 +309,10 @@ void Channel::broadcast(Client *sender,
     if (command == "PRIVMSG" && *it == sender)
       continue;
     if (command == "PRIVMSG" || command == "KICK") {
-       (*it)->broadcast(sender, command + " " + this->get_only_name(), "", message);
-    }else{
-       (*it)->broadcast(sender, command, target, message);
+      (*it)->broadcast(sender, command + " " + this->get_only_name(), "",
+                       message);
+    } else {
+      (*it)->broadcast(sender, command, target, message);
     }
   }
 }

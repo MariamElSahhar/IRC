@@ -49,20 +49,20 @@ class Client {
   bool is_registered(void) const;
 	bool is_disconnected(void) const;
 
+	void set_disconnected(void);
   void set_nickname(std::string nickname);
   void set_realname(std::string realname);
   void set_username(std::string username);
   void set_servername(std::string servername);
   void set_hostname(std::string hostname);
 	void set_buffer(std::string buffer);
-	void clear_buffer(void);
   void set_operator(std::string oper_password);
   void unset_operator(void);
+	void clear_buffer(void);
 
   std::deque<std::string> pendingWrite;
 
   void authenticate(void);
-	void set_disconnected(void);
   void register_client(void);
   std::string generatePrefix(void);
 
