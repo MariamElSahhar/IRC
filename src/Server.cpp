@@ -320,9 +320,6 @@ std::vector<Channel *> Server::list_channels(void) {
 }
 
 Channel *Server::get_channel(std::string name) {
-  // if name doesn't end in ":hostname", append ":hostname"
-  if (name.find(":") == std::string::npos)
-    name += ":" + hostName;
   for (size_t i = 0; i < _channels.size(); i++)
     if (_channels[i]->get_name() == name)
       return _channels[i];
