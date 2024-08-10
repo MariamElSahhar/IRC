@@ -164,11 +164,14 @@ void Client::broadcast(Client *sender,
                "@" + sender->get_hostname() + " ";
   command_str = command + " ";
   target_str = target + " ";
-  if (command == "KICK" || command == "INVITE" || message.empty() ||
+  if (command.find("KICK") != std::string::npos || command == "INVITE" || message.empty() ||
       message[0] == ':')
     message_str = message;
   else
     message_str = ":" + message;
+
+  if (command.find("KICK")!= std::string::npos)
+     target_str = "";
 
   // Format ":<sender> <command> <target> :<message>\r\n"
   std::string reply =
