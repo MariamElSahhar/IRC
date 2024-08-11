@@ -44,7 +44,7 @@ void CommandInvite::execute(int &clientSocket,
   // if client is not on the channel he is inviting to
   if (server->get_channel(params->at(1)) != NULL &&
       server->get_channel(params->at(1))->isUserOnChannel(params->at(0)) ==
-          false) {
+          true) {
     server->sendResponse(
         clientSocket, ERR_NOTONCHANNEL(params->at(1), client->get_hostname()));
     return;
