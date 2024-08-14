@@ -75,9 +75,14 @@ void CommandUser::execute(int &clientSocket,
   }
 
   // assigning parameters to client attributes
-  client->set_username(username);
-  client->set_realname(realname);
-  client->set_hostname(hostname);
-  client->set_servername(servername);
-  client->register_client();
+  if (client->is_authenticated() == true) {
+    client->set_username(username);
+    client->set_realname(realname);
+    client->set_hostname(hostname);
+    client->set_servername(servername);
+    client->register_client();
+  } else
+    server->delete_client_by_nickname(
+        client->get_nickname(),
+        "Server disconnected due to authentication failure\r\n");
 }

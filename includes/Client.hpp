@@ -24,7 +24,6 @@ class Client {
   std::string _username;
   std::string _realname;
   std::string currentMessage;
-
   std::string _hostname;
   std::string _servername;
 

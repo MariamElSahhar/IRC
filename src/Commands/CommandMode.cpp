@@ -53,8 +53,10 @@ void CommandMode::execute(int &clientSocket,
     // Set or unset the mode
     if (mode == '-')
       channel->unset_mode(flag, *server, *params, client, channel->get_name());
-    else if (mode == '+')
+    else if (mode == '+') {
       channel->set_mode(flag, *server, *params, client, channel->get_name());
+			std::cout << "modes" << channel->get_modes() << std::endl;
+		}
     else
       server->sendResponse(clientSocket, ERR_UNKNOWNMODE(channel->get_name()));
   } else {
