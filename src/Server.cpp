@@ -258,11 +258,7 @@ void Server::messageHandler(std::string msg, Client *client) {
       break;
     if (line.empty())
       continue;
-    // Check of line ends in \r\n
-    if (line.length() > 0 && line[line.length() - 1] != '\r') {
-      client->set_buffer(line);
-      continue;
-    }
+
     // If the line ends in \r, it is a complete command
     // If there is a buffer, append it to the line and clear it
     try {
