@@ -25,15 +25,11 @@ void CommandJoin::execute(int &clientSocket,
     Channel *channel = server->get_channel(channel_name);
     // Create channel if it does not exist, The first user to join creates it.
     if (channel == NULL) {
-      if (!client->is_operator()) {
-        server->sendResponse(clientSocket, ERR_NOPRIVILEGES(channel_name));
-        return;
-      }
       server->sendResponse(
           clientSocket,
           ERR_NOSUCHCHANNEL(channel_name, server->get_hostname()) +
               " Creating channel\r\n");
-      channel = new Channel(channel_name, server->get_hostname(), *server);
+      channel = new Channel(channel_name, *server);
       server->add_channel(channel);
       channel->increase_user_quantity();
       channel->join(client);
@@ -72,9 +68,10 @@ void CommandJoin::execute(int &clientSocket,
     // Channel Topic and Names
     std::vector<std::string> param;
     param.push_back(channel->get_name());
-    channel->topic(client, param);
-    channel->names(client);
+    channel->topic(*server, client, param);
+    channel->names(*server, client);
   } else
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
 }

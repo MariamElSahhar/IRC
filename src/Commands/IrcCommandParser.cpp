@@ -55,6 +55,10 @@ CommandType IrcCommandParser::getMessageType() {
     return JOIN;
   if (_command.compare("PART") == 0)
     return PART;
+  if (_command.compare("OPER") == 0)
+    return OPER;
+  if (_command.compare("UNOPER") == 0)
+    return UNOPER;
   if (_command.compare("PRIVMSG") == 0)
     return PRIVMSG;
   if (_command.compare("PASS") == 0)
@@ -63,5 +67,11 @@ CommandType IrcCommandParser::getMessageType() {
     return NICK;
   if (_command.compare("USER") == 0)
     return USER;
+  if (_command.compare("CAP") == 0)
+    return CAP;
+  if (_command.compare("PING") == 0)
+    return PING;
+  if (_command.compare("QUIT") == 0)
+    return QUIT;
   return INVALID;
 }

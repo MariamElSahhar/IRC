@@ -58,8 +58,9 @@ void CommandKick::execute(int &clientSocket,
       reason = (*params)[2];
     else
       reason = "Kicked";
-    channel->kick(target, client, reason);
+    channel->kick(*server, client, target, reason);
   } else
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
 }

@@ -22,22 +22,11 @@ std::string CommandUser::parse_realname(std::vector<std::string> &params) {
   return realname;
 }
 
+// Validation needs cleanup
 bool CommandUser::validate_command(int &clientSocket,
                                    Client *client,
                                    Server *server,
                                    std::vector<std::string> &params) {
-  // if USER already set
-  if (client->is_registered()) {
-    server->sendResponse(clientSocket,
-                         ERR_ALREADYREGISTERED(server->get_hostname()));
-    return (false);
-  }
-  // if PASS isn't set
-  if (!client->is_authenticated()) {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
-    return (false);
-  }
   // if NICK isn't set
   if (client->get_nickname().empty()) {
     server->sendResponse(clientSocket,
@@ -50,12 +39,6 @@ bool CommandUser::validate_command(int &clientSocket,
                          ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
     return (false);
   }
-  // realname must be prefixed by :
-  // if (params.at(3)[0] != ':') {
-  //   server->sendResponse(clientSocket,
-  //                        ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
-  //   return (false);
-  // }
   return (true);
 }
 
@@ -63,8 +46,16 @@ void CommandUser::execute(int &clientSocket,
                           Client *client,
                           Server *server,
                           std::vector<std::string> *params) {
-  if (!validate_command(clientSocket, client, server, *params))
+  // if USER already set
+  if (client->is_registered())
+    server->sendResponse(clientSocket,
+                         ERR_ALREADYREGISTERED(server->get_hostname()));
+  if (!validate_command(clientSocket, client, server, *params)) {
+    server->delete_client_by_nickname(
+        client->get_nickname(),
+        "Server disconnected due to authentication failure\r\n");
     return;
+  }
 
   // assigning parameters to variables
   std::string username = params->at(0);
@@ -77,13 +68,21 @@ void CommandUser::execute(int &clientSocket,
       realname.empty()) {
     server->sendResponse(clientSocket,
                          ERR_NEEDMOREPARAMS("USER", server->get_hostname()));
+    server->delete_client_by_nickname(
+        client->get_nickname(),
+        "Server disconnected due to authentication failure\r\n");
     return;
   }
 
   // assigning parameters to client attributes
-  client->set_username(username);
-  client->set_realname(realname);
-  client->set_hostname(hostname);
-  client->set_servername(servername);
-  client->register_client();
+  if (client->is_authenticated() == true) {
+    client->set_username(username);
+    client->set_realname(realname);
+    client->set_hostname(hostname);
+    client->set_servername(servername);
+    client->register_client();
+  } else
+    server->delete_client_by_nickname(
+        client->get_nickname(),
+        "Server disconnected due to authentication failure\r\n");
 }

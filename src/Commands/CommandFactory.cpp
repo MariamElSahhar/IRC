@@ -37,7 +37,23 @@ ICommand *CommandFactory::createCommand(CommandType cmdType) {
     case USER:
       command = new CommandUser();
       break;
+    case OPER:
+      command = new CommandOper();
+      break;
+    case UNOPER:
+      command = new CommandUnOper();
+      break;
+    case CAP:
+      command = new CommandCap();
+      break;
+    case PING:
+      command = new CommandPing();
+      break;
+    case QUIT:
+      command = new CommandQuit();
+      break;
     default:
+			command = NULL;
       break;
   }
   return command;

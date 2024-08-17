@@ -16,6 +16,7 @@
 #include <cstring>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <utility>
 #include <vector>
 #include "CommandFactory.hpp"
@@ -43,6 +44,22 @@ class CommandFactory;
 class Channel;
 
 class Server {
+ private:
+  int portNb;
+  int socketNb;
+  std::string password;
+  std::string oper_pass;
+  std::string ipAddress;
+  std::string hostName;
+  std::vector<pollfd> pollFdVector;
+  IrcClients *ircClients;
+  CommandFactory *commandFactory;
+  std::vector<Channel *> _channels;
+
+  Server();
+  Server(Server const &);
+  Server &operator=(Server const &);
+
  public:
   Server(int port,
          std::string password,
@@ -54,31 +71,21 @@ class Server {
   void createSocket(int fd);
   void waitConnections();
   void acceptConnection();
+  void add_channel(Channel *channel);
   std::string getPassword();
   std::string get_hostname();
+  std::string get_oper_password(void);
+  std::vector<Channel *> list_channels(void);
+  Channel *get_channel(std::string name);
+  Client *get_client_by_nickname(const std::string &nickname);
   int readMessage(int indexFd);
 
-  Client *get_client_by_nickname(const std::string &nickname);
-  Channel *get_channel(std::string name);
-  void add_channel(Channel *channel);
-
+  void messageHandler(std::string msg, Client *client);
   void sendResponse(int clientSocket, std::string msg);
+
   void cleanUp();
-
- private:
-  int portNb;
-  int socketNb;
-  std::string password;
-  std::string ipAddress;
-  std::string hostName;
-  std::vector<pollfd> pollFdVector;
-  IrcClients *ircClients;
-  CommandFactory *commandFactory;
-  std::vector<Channel *> _channels;
-
-  Server();
-  Server(Server const &);
-  Server &operator=(Server const &);
+  void delete_client_by_nickname(const std::string &nickname,
+                                 std::string reason);
 };
 
 #endif

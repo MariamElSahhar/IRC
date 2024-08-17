@@ -17,8 +17,9 @@ void CommandInvite::execute(int &clientSocket,
 
   if (client->is_authenticated() == false)  // client not authenticated
   {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(client->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
     return;
   }
 
@@ -43,7 +44,7 @@ void CommandInvite::execute(int &clientSocket,
   // if client is not on the channel he is inviting to
   if (server->get_channel(params->at(1)) != NULL &&
       server->get_channel(params->at(1))->isUserOnChannel(params->at(0)) ==
-          false) {
+          true) {
     server->sendResponse(
         clientSocket, ERR_NOTONCHANNEL(params->at(1), client->get_hostname()));
     return;
@@ -51,9 +52,9 @@ void CommandInvite::execute(int &clientSocket,
 
   // client is not an operator and this is required
   if (server->get_channel(params->at(1)) != NULL &&
-      server->get_channel(params->at(1))->get_invite_only() == true &&
-      server->get_channel(params->at(1))->is_channel_operator(params->at(0)) ==
-          false) {
+      (server->get_channel(params->at(1))->get_invite_only() == true ||
+      server->get_channel(params->at(1))->is_channel_operator(client->get_nickname()) ==
+          false)) {
     server->sendResponse(
         clientSocket,
         ERR_CHANOPRIVSNEEDED(params->at(1), client->get_hostname()));

@@ -1,6 +1,6 @@
 #include "CommandPrivMsg.hpp"
-#include "Server.hpp"
 #include "Channel.hpp"
+#include "Server.hpp"
 
 CommandPrivMsg::CommandPrivMsg() {}
 CommandPrivMsg::~CommandPrivMsg() {}
@@ -10,8 +10,9 @@ bool CommandPrivMsg::validate_command(int &clientSocket,
                                       Server *server,
                                       std::vector<std::string> &params) {
   if (!client->is_registered()) {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
     return (false);
   }
   if (params.size() < 2 || params[0].empty() || params[1].empty()) {
@@ -24,11 +25,11 @@ bool CommandPrivMsg::validate_command(int &clientSocket,
                          ERR_NORECIPIENT("NICK", server->get_hostname()));
     return (false);
   }
-//   if (params[1][0] != ':') {
-//     server->sendResponse(clientSocket,
-//                          ERR_NOTEXTTOSEND(server->get_hostname()));
-//     return (false);
-//   }
+  //   if (params[1][0] != ':') {
+  //     server->sendResponse(clientSocket,
+  //                          ERR_NOTEXTTOSEND(server->get_hostname()));
+  //     return (false);
+  //   }
   if (params.size() < 3 && params[1].length() < 2) {
     server->sendResponse(clientSocket,
                          ERR_NOTEXTTOSEND(server->get_hostname()));

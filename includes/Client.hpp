@@ -18,13 +18,12 @@ class Client {
   bool _operator;
   bool _authenticated;
   bool _registered;
+	bool _disconnected;
   std::string _server_hostname;
   std::string _nickname;
   std::string _username;
   std::string _realname;
-  std::string fullMessage;
   std::string currentMessage;
-
   std::string _hostname;
   std::string _servername;
 
@@ -34,7 +33,6 @@ class Client {
  public:
   Client(int fd, Server &server, std::string ip);
   ~Client();
-  void messageHandler(char msg[]);
   bool isMessageReady();
 
   std::string get_EntireMessage();
@@ -43,24 +41,29 @@ class Client {
   std::string get_username(void) const;
   std::string get_hostname(void) const;
   std::string get_servername(void) const;
+  std::string get_buffer(void) const;
   int get_socket(void) const;
   bool is_operator(void) const;
   bool is_authenticated(void) const;
   bool is_registered(void) const;
+	bool is_disconnected(void) const;
 
+	void set_disconnected(void);
   void set_nickname(std::string nickname);
   void set_realname(std::string realname);
   void set_username(std::string username);
   void set_servername(std::string servername);
   void set_hostname(std::string hostname);
+	void set_buffer(std::string buffer);
   void set_operator(std::string oper_password);
   void unset_operator(void);
+	void clear_buffer(void);
 
   std::deque<std::string> pendingWrite;
 
-  void authenticate();
+  void authenticate(void);
   void register_client(void);
-  std::string generatePrefix();
+  std::string generatePrefix(void);
 
   // User data
   void reply(std::string code, std::string msg);

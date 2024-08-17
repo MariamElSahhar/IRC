@@ -1,5 +1,5 @@
 #include "Client.hpp"
-#include "ErrorCodes.hpp"
+#include "IrcClients.hpp"
 #include "Server.hpp"
 
 Client::Client(int fd, Server &server, std::string ip) {
@@ -15,9 +15,10 @@ Client::Client(int fd, Server &server, std::string ip) {
   _servername = "";
   _realname = "";
 
-  _operator = true;
+  _operator = false;
   _registered = false;
   _authenticated = false;
+  _disconnected = false;
 }
 
 Client::~Client() {}
@@ -54,57 +55,30 @@ bool Client::is_operator(void) const {
   return _operator;
 }
 
+bool Client::is_disconnected(void) const {
+  return _disconnected;
+}
+
 bool Client::isMessageReady() {
-  return (!this->fullMessage.empty());
+  return (this->currentMessage.empty());
 }
 
-std::string Client::get_EntireMessage() {
-  return (fullMessage);
+void Client::set_disconnected(void) {
+  if (_disconnected)
+    return;
+  _disconnected = true;
 }
 
-void Client::messageHandler(char msg[]) {
-  if (!fullMessage.empty()) {
-    fullMessage.clear();
-  }
-
-  if (strstr(msg, "\n") == 0) {
-    currentMessage.append(msg);
-  } else {
-    processMessage(msg);
-  }
-  memset(msg, 0, MAX_BUF);
+void Client::set_buffer(std::string buffer) {
+  this->currentMessage += buffer;
 }
 
-void Client::processMessage(const char *msg) {
-  currentMessage.append(
-      msg);  // Append the incoming message to the current message
-  fullMessage.append(
-      currentMessage);  // Append the current message to the full message
-
-  if (!fullMessage.empty() &&
-      (*fullMessage.rbegin() == '\n' || *fullMessage.rbegin() == '\r'))
-    fullMessage.erase(fullMessage.length() - 1);
-  currentMessage.clear();  // Clear the current message
+std::string Client::get_buffer(void) const {
+  return (this->currentMessage);
 }
 
-void Client::reply(std::string code, std::string msg) {
-  std::string hostname_str = ":" + _server_hostname + " ";
-  std::string code_str;
-  std::string nickname_str;
-
-  if (code.empty())
-    code_str = "";
-  else
-    code_str = code + " ";
-
-  if (_nickname.empty())
-    nickname_str = "unregistered ";
-  else
-    nickname_str = _nickname + " ";
-
-  std::string reply = hostname_str + code_str + nickname_str + msg + "\r\n";
-  std::cout << "Reply: " << reply << std::endl;
-  send(_socket, reply.c_str(), reply.length(), 0);
+void Client::clear_buffer(void) {
+  this->currentMessage.clear();
 }
 
 std::string Client::get_servername() const {
@@ -156,6 +130,26 @@ void Client::set_hostname(std::string hostname) {
   _hostname = hostname;
 }
 
+// DEPRACATED Please use server.sendResponse()
+void Client::reply(std::string code, std::string msg) {
+  std::string hostname_str = ":" + _server_hostname + " ";
+  std::string code_str;
+  std::string nickname_str;
+
+  if (code.empty())
+    code_str = "";
+  else
+    code_str = code + " ";
+
+  if (_nickname.empty())
+    nickname_str = "unregistered ";
+  else
+    nickname_str = _nickname + " ";
+
+  std::string reply = hostname_str + code_str + nickname_str + msg + "\r\n";
+  send(_socket, reply.c_str(), reply.length(), 0);
+}
+
 void Client::broadcast(Client *sender,
                        std::string command,
                        std::string target,
@@ -170,17 +164,18 @@ void Client::broadcast(Client *sender,
                "@" + sender->get_hostname() + " ";
   command_str = command + " ";
   target_str = target + " ";
-  if (command == "KICK" || command == "INVITE" || message.empty() ||
+  if (command.find("KICK") != std::string::npos || command == "INVITE" || message.empty() ||
       message[0] == ':')
     message_str = message;
   else
     message_str = ":" + message;
 
+  if (command.find("KICK")!= std::string::npos)
+     target_str = "";
+
   // Format ":<sender> <command> <target> :<message>\r\n"
   std::string reply =
       sender_str + command_str + target_str + message_str + "\r\n";
-
-  std::cout << "Broadcast: " << reply << std::endl;
 
   send(_socket, reply.c_str(), reply.length(), 0);
   return;

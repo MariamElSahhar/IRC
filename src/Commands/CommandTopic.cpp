@@ -23,8 +23,9 @@ void CommandTopic::execute(int &clientSocket,
 
   // Check if the client is authenticated:
   if (!client->is_authenticated()) {
-    server->sendResponse(clientSocket,
-                         ERR_NOTREGISTERED(server->get_hostname()));
+    server->sendResponse(
+        clientSocket,
+        ERR_NOTREGISTERED(client->get_hostname(), client->get_nickname()));
     return;
   }
 

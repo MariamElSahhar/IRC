@@ -1,5 +1,8 @@
 en.subject.pdf
+/build/
 .vscode/
 .cache/
 .github/
 .clangd
+CMakeLists.txt
+compile_commands.json

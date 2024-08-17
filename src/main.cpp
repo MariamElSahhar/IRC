@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstdlib>
 #include "Client.hpp"
 #include "CommandFactory.hpp"
 #include "IrcClients.hpp"
