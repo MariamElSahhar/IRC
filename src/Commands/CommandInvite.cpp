@@ -52,9 +52,9 @@ void CommandInvite::execute(int &clientSocket,
 
   // client is not an operator and this is required
   if (server->get_channel(params->at(1)) != NULL &&
-      server->get_channel(params->at(1))->get_invite_only() == true &&
+      (server->get_channel(params->at(1))->get_invite_only() == true ||
       server->get_channel(params->at(1))->is_channel_operator(client->get_nickname()) ==
-          false) {
+          false)) {
     server->sendResponse(
         clientSocket,
         ERR_CHANOPRIVSNEEDED(params->at(1), client->get_hostname()));

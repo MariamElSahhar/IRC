@@ -249,6 +249,14 @@ void Server::messageHandler(std::string msg, Client *client) {
   std::istringstream iss(msg);
   int clientFd = client->get_socket();
 
+  if(msg.find('\r') == std::string::npos && msg.find('\n') == std::string::npos)
+  {
+    std::cout << " (partial)" << std::endl;
+    client->set_buffer(msg);
+    return;
+  }
+
+
   while (std::getline(iss, line)) {
     if(ircClients->getClient(clientFd) == NULL){
       std::cout << "Warning: client no longer connected, ignoring its messages " << msg << std::endl;
@@ -266,6 +274,7 @@ void Server::messageHandler(std::string msg, Client *client) {
         line = client->get_buffer() + line;
         client->clear_buffer();
       }
+      std::cout << "Command received: " << line << std::endl;
       IrcCommandParser parser = IrcCommandParser(line);
       CommandType commandType = parser.getMessageType();
       if (commandType != INVALID) {
