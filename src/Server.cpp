@@ -222,7 +222,8 @@ int Server::readMessage(int i) {
       std::cerr << YELLOW "Connection Error!" RESET << std::endl;
     //  deleting client that disconnected
     if (!ircClients->removeClient(clientFd)) {
-      std::cerr << "Failed to remove client!" << std::endl;
+			//    std::cerr << "Failed to remove client!" << clientFd << std::endl;
+			// std::cout << ircClients->getClient(clientFd) << std::endl;
     }
     std::vector<pollfd>::iterator it2;
     for (it2 = pollFdVector.begin(); it2 != pollFdVector.end(); it2++) {
@@ -249,17 +250,17 @@ void Server::messageHandler(std::string msg, Client *client) {
   std::istringstream iss(msg);
   int clientFd = client->get_socket();
 
-  if(msg.find('\r') == std::string::npos && msg.find('\n') == std::string::npos)
-  {
+  if (msg.find('\r') == std::string::npos &&
+      msg.find('\n') == std::string::npos) {
     std::cout << " (partial)" << std::endl;
     client->set_buffer(msg);
     return;
   }
 
-
   while (std::getline(iss, line)) {
-    if(ircClients->getClient(clientFd) == NULL){
-      std::cout << "Warning: client no longer connected, ignoring its messages " << msg << std::endl;
+    if (ircClients->getClient(clientFd) == NULL) {
+      std::cout << "Warning: client no longer connected, ignoring its messages "
+                << msg << std::endl;
       break;
     }
     if (client->is_disconnected())

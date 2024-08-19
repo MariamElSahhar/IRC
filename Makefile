@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = ircserv
-CXX = c++ -g
+CXX = c++
 CXXFLAGS = -std=c++98 -Wall -Wextra -Werror
 
 INC_PATH = ./includes/
