@@ -28,7 +28,6 @@ void CommandNick::execute(int &clientSocket,
                          ERR_NEEDMOREPARAMS("NICK", server->get_hostname()));
     return;
   }
-
   std::string nick = params->at(0);
   if (!validate_nick(nick)) {
     server->sendResponse(clientSocket,
@@ -40,8 +39,7 @@ void CommandNick::execute(int &clientSocket,
                          ERR_NICKNAMEINUSE(server->get_hostname(), nick));
     return;
   }
+  std::string oldnick = client->get_nickname();
   client->set_nickname(nick);
-
-  std::string response = "Nickname set to " + nick + "\r\n";
-  server->sendResponse(clientSocket, response);
+  server->sendResponse(clientSocket, NICKNAMECHANGE(nick, oldnick));
 }
