@@ -182,6 +182,8 @@ void Channel::set_mode(char mode,
       }
       target_name = params[2];
       target = get_client(target_name, _clients);
+      if (!target)
+        break;
       if (!this->has_client(target)) {
         server.sendResponse(client->get_socket(),
                             ERR_USERNOTINCHANNEL(target_name, channel_name,
@@ -257,6 +259,8 @@ void Channel::unset_mode(char mode,
       }
       target_name = params[2];
       target = get_client(target_name, _clients);
+      if (!target)
+        break;
       if (!this->has_client(target)) {
         server.sendResponse(client->get_socket(),
                             ERR_USERNOTINCHANNEL(target_name, channel_name,
@@ -304,14 +308,12 @@ void Channel::broadcast(Client *sender,
     if (command == "PRIVMSG" && *it == sender)
       continue;
     if (command == "PRIVMSG" || command == "KICK") {
-      (*it)->broadcast(sender, command + " " + this->get_name(), "",
-                       message);
+      (*it)->broadcast(sender, command + " " + this->get_name(), "", message);
     } else {
       (*it)->broadcast(sender, command, target, message);
     }
   }
 }
-
 
 std::string Channel::get_name(void) const {
   return this->_name;
