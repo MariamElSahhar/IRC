@@ -84,7 +84,7 @@ void CommandTopic::execute(int &clientSocket,
     server->sendResponse(
         channelClients[i]->get_socket(),
         RPL_TOPIC(client->generatePrefix(), client->get_nickname(),
-                  params->at(1), server->get_hostname()));
+                  params->at(0), params->at(1)));
   }
 }
 
